@@ -327,7 +327,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * Returns a {@code char} matcher that matches any BMP character not present in the given
    * character sequence. Returns a bogus matcher if the sequence contains supplementary characters.
    */
-  public static CharMatcher noneOf(CharSequence sequence) {
+  public static CharMatcher noneOf(final CharSequence sequence) {
     return anyOf(sequence).negate();
   }
 
@@ -375,14 +375,14 @@ public abstract class CharMatcher implements Predicate<Character> {
   /**
    * Returns a matcher that matches any character matched by both this matcher and {@code other}.
    */
-  public CharMatcher and(CharMatcher other) {
+  public CharMatcher and(final CharMatcher other) {
     return new And(this, other);
   }
 
   /**
    * Returns a matcher that matches any character matched by either this matcher or {@code other}.
    */
-  public CharMatcher or(CharMatcher other) {
+  public CharMatcher or(final CharMatcher other) {
     return new Or(this, other);
   }
 
@@ -415,16 +415,16 @@ public abstract class CharMatcher implements Predicate<Character> {
   CharMatcher precomputedInternal() {
     final BitSet table = new BitSet();
     setBits(table);
-    int totalCharacters = table.cardinality();
+    final int totalCharacters = table.cardinality();
     if (totalCharacters * 2 <= DISTINCT_CHARS) {
       return precomputedPositive(totalCharacters, table, toString());
     } else {
       // TODO(lowasser): is it worth it to worry about the last character of large matchers?
       table.flip(Character.MIN_VALUE, Character.MAX_VALUE + 1);
-      int negatedCharacters = DISTINCT_CHARS - totalCharacters;
-      String suffix = ".negate()";
+      final int negatedCharacters = DISTINCT_CHARS - totalCharacters;
+      final String suffix = ".negate()";
       final String description = toString();
-      String negatedDescription =
+      final String negatedDescription =
           description.endsWith(suffix)
               ? description.substring(0, description.length() - suffix.length())
               : description + suffix;
@@ -443,15 +443,15 @@ public abstract class CharMatcher implements Predicate<Character> {
    */
   @GwtIncompatible // SmallCharMatcher
   private static CharMatcher precomputedPositive(
-      int totalCharacters, BitSet table, String description) {
+      final int totalCharacters, final BitSet table, final String description) {
     switch (totalCharacters) {
       case 0:
         return none();
       case 1:
         return is((char) table.nextSetBit(0));
       case 2:
-        char c1 = (char) table.nextSetBit(0);
-        char c2 = (char) table.nextSetBit(c1 + 1);
+        final char c1 = (char) table.nextSetBit(0);
+        final char c2 = (char) table.nextSetBit(c1 + 1);
         return isEither(c1, c2);
       default:
         return isSmall(totalCharacters, table.length())
@@ -461,7 +461,7 @@ public abstract class CharMatcher implements Predicate<Character> {
   }
 
   @GwtIncompatible // SmallCharMatcher
-  private static boolean isSmall(int totalCharacters, int tableLength) {
+  private static boolean isSmall(final int totalCharacters, final int tableLength) {
     return totalCharacters <= SmallCharMatcher.MAX_SIZE
         && tableLength > (totalCharacters * 4 * Character.SIZE);
     // err on the side of BitSetMatcher
@@ -469,7 +469,7 @@ public abstract class CharMatcher implements Predicate<Character> {
 
   /** Sets bits in {@code table} matched by this matcher. */
   @GwtIncompatible // used only from other GwtIncompatible code
-  void setBits(BitSet table) {
+  void setBits(final BitSet table) {
     for (int c = Character.MAX_VALUE; c >= Character.MIN_VALUE; c--) {
       if (matches((char) c)) {
         table.set(c);
@@ -490,7 +490,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @return {@code true} if this matcher matches at least one character in the sequence
    * @since 8.0
    */
-  public boolean matchesAnyOf(CharSequence sequence) {
+  public boolean matchesAnyOf(final CharSequence sequence) {
     return !matchesNoneOf(sequence);
   }
 
@@ -504,7 +504,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @return {@code true} if this matcher matches every character in the sequence, including when
    *     the sequence is empty
    */
-  public boolean matchesAllOf(CharSequence sequence) {
+  public boolean matchesAllOf(final CharSequence sequence) {
     for (int i = sequence.length() - 1; i >= 0; i--) {
       if (!matches(sequence.charAt(i))) {
         return false;
@@ -524,7 +524,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @return {@code true} if this matcher matches no characters in the sequence, including when the
    *     sequence is empty
    */
-  public boolean matchesNoneOf(CharSequence sequence) {
+  public boolean matchesNoneOf(final CharSequence sequence) {
     return indexIn(sequence) == -1;
   }
 
@@ -538,7 +538,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @param sequence the character sequence to examine from the beginning
    * @return an index, or {@code -1} if no character matches
    */
-  public int indexIn(CharSequence sequence) {
+  public int indexIn(final CharSequence sequence) {
     return indexIn(sequence, 0);
   }
 
@@ -557,8 +557,8 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @throws IndexOutOfBoundsException if start is negative or greater than {@code
    *     sequence.length()}
    */
-  public int indexIn(CharSequence sequence, int start) {
-    int length = sequence.length();
+  public int indexIn(final CharSequence sequence, final int start) {
+    final int length = sequence.length();
     checkPositionIndex(start, length);
     for (int i = start; i < length; i++) {
       if (matches(sequence.charAt(i))) {
@@ -578,7 +578,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @param sequence the character sequence to examine from the end
    * @return an index, or {@code -1} if no character matches
    */
-  public int lastIndexIn(CharSequence sequence) {
+  public int lastIndexIn(final CharSequence sequence) {
     for (int i = sequence.length() - 1; i >= 0; i--) {
       if (matches(sequence.charAt(i))) {
         return i;
@@ -592,7 +592,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * <p>Counts 2 per supplementary character, such as for {@link #whitespace}().{@link #negate}().
    */
-  public int countIn(CharSequence sequence) {
+  public int countIn(final CharSequence sequence) {
     int count = 0;
     for (int i = 0; i < sequence.length(); i++) {
       if (matches(sequence.charAt(i))) {
@@ -612,14 +612,14 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... returns {@code "bzr"}.
    */
-  public String removeFrom(CharSequence sequence) {
-    String string = sequence.toString();
+  public String removeFrom(final CharSequence sequence) {
+    final String string = sequence.toString();
     int pos = indexIn(string);
     if (pos == -1) {
       return string;
     }
 
-    char[] chars = string.toCharArray();
+    final char[] chars = string.toCharArray();
     int spread = 1;
 
     // This unusual loop comes from extensive benchmarking
@@ -651,7 +651,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... returns {@code "aaa"}.
    */
-  public String retainFrom(CharSequence sequence) {
+  public String retainFrom(final CharSequence sequence) {
     return negate().removeFrom(sequence);
   }
 
@@ -674,13 +674,13 @@ public abstract class CharMatcher implements Predicate<Character> {
    *     character in {@code sequence}
    * @return the new string
    */
-  public String replaceFrom(CharSequence sequence, char replacement) {
-    String string = sequence.toString();
-    int pos = indexIn(string);
+  public String replaceFrom(final CharSequence sequence, final char replacement) {
+    final String string = sequence.toString();
+    final int pos = indexIn(string);
     if (pos == -1) {
       return string;
     }
-    char[] chars = string.toCharArray();
+    final char[] chars = string.toCharArray();
     chars[pos] = replacement;
     for (int i = pos + 1; i < chars.length; i++) {
       if (matches(chars[i])) {
@@ -708,8 +708,8 @@ public abstract class CharMatcher implements Predicate<Character> {
    *     character in {@code sequence}
    * @return the new string
    */
-  public String replaceFrom(CharSequence sequence, CharSequence replacement) {
-    int replacementLen = replacement.length();
+  public String replaceFrom(final CharSequence sequence, final CharSequence replacement) {
+    final int replacementLen = replacement.length();
     if (replacementLen == 0) {
       return removeFrom(sequence);
     }
@@ -717,14 +717,14 @@ public abstract class CharMatcher implements Predicate<Character> {
       return replaceFrom(sequence, replacement.charAt(0));
     }
 
-    String string = sequence.toString();
+    final String string = sequence.toString();
     int pos = indexIn(string);
     if (pos == -1) {
       return string;
     }
 
-    int len = string.length();
-    StringBuilder buf = new StringBuilder((len * 3 / 2) + 16);
+    final int len = string.length();
+    final StringBuilder buf = new StringBuilder((len * 3 / 2) + 16);
 
     int oldpos = 0;
     do {
@@ -756,8 +756,8 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... is equivalent to {@link String#trim()}.
    */
-  public String trimFrom(CharSequence sequence) {
-    int len = sequence.length();
+  public String trimFrom(final CharSequence sequence) {
+    final int len = sequence.length();
     int first;
     int last;
 
@@ -785,8 +785,8 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... returns {@code "catbab"}.
    */
-  public String trimLeadingFrom(CharSequence sequence) {
-    int len = sequence.length();
+  public String trimLeadingFrom(final CharSequence sequence) {
+    final int len = sequence.length();
     for (int first = 0; first < len; first++) {
       if (!matches(sequence.charAt(first))) {
         return sequence.subSequence(first, len).toString();
@@ -805,8 +805,8 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... returns {@code "abacat"}.
    */
-  public String trimTrailingFrom(CharSequence sequence) {
-    int len = sequence.length();
+  public String trimTrailingFrom(final CharSequence sequence) {
+    final int len = sequence.length();
     for (int last = len - 1; last >= 0; last--) {
       if (!matches(sequence.charAt(last))) {
         return sequence.subSequence(0, last + 1).toString();
@@ -834,17 +834,17 @@ public abstract class CharMatcher implements Predicate<Character> {
    *     matching characters in {@code sequence}
    * @return the new string
    */
-  public String collapseFrom(CharSequence sequence, char replacement) {
+  public String collapseFrom(final CharSequence sequence, final char replacement) {
     // This implementation avoids unnecessary allocation.
-    int len = sequence.length();
+    final int len = sequence.length();
     for (int i = 0; i < len; i++) {
-      char c = sequence.charAt(i);
+      final char c = sequence.charAt(i);
       if (matches(c)) {
         if (c == replacement && (i == len - 1 || !matches(sequence.charAt(i + 1)))) {
           // a no-op replacement
           i++;
         } else {
-          StringBuilder builder = new StringBuilder(len).append(sequence, 0, i).append(replacement);
+          final StringBuilder builder = new StringBuilder(len).append(sequence, 0, i).append(replacement);
           return finishCollapseFrom(sequence, i + 1, len, replacement, builder, true);
         }
       }
@@ -858,9 +858,9 @@ public abstract class CharMatcher implements Predicate<Character> {
    * groups of matching BMP characters at the start or end of the sequence are removed without
    * replacement.
    */
-  public String trimAndCollapseFrom(CharSequence sequence, char replacement) {
+  public String trimAndCollapseFrom(final CharSequence sequence, final char replacement) {
     // This implementation avoids unnecessary allocation.
-    int len = sequence.length();
+    final int len = sequence.length();
     int first = 0;
     int last = len - 1;
 
@@ -879,14 +879,14 @@ public abstract class CharMatcher implements Predicate<Character> {
   }
 
   private String finishCollapseFrom(
-      CharSequence sequence,
-      int start,
-      int end,
-      char replacement,
-      StringBuilder builder,
+      final CharSequence sequence,
+      final int start,
+      final int end,
+      final char replacement,
+      final StringBuilder builder,
       boolean inMatchingGroup) {
     for (int i = start; i < end; i++) {
-      char c = sequence.charAt(i);
+      final char c = sequence.charAt(i);
       if (matches(c)) {
         if (!inMatchingGroup) {
           builder.append(replacement);
@@ -906,7 +906,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    */
   @Deprecated
   @Override
-  public boolean apply(Character character) {
+  public boolean apply(final Character character) {
     return matches(character);
   }
 
@@ -924,8 +924,8 @@ public abstract class CharMatcher implements Predicate<Character> {
    * "12AB" is the four hexadecimal digits representing the 16-bit code unit.
    */
   private static String showCharacter(char c) {
-    String hex = "0123456789ABCDEF";
-    char[] tmp = {'\\', 'u', '\0', '\0', '\0', '\0'};
+    final String hex = "0123456789ABCDEF";
+    final char[] tmp = {'\\', 'u', '\0', '\0', '\0', '\0'};
     for (int i = 0; i < 4; i++) {
       tmp[5 - i] = hex.charAt(c & 0xF);
       c = (char) (c >> 4);
@@ -954,7 +954,7 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     private final String description;
 
-    NamedFastMatcher(String description) {
+    NamedFastMatcher(final String description) {
       this.description = checkNotNull(description);
     }
 
@@ -967,7 +967,7 @@ public abstract class CharMatcher implements Predicate<Character> {
   /** Negation of a {@link FastMatcher}. */
   static class NegatedFastMatcher extends Negated {
 
-    NegatedFastMatcher(CharMatcher original) {
+    NegatedFastMatcher(final CharMatcher original) {
       super(original);
     }
 
@@ -983,7 +983,7 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     private final BitSet table;
 
-    private BitSetMatcher(BitSet table, String description) {
+    private BitSetMatcher(BitSet table, final String description) {
       super(description);
       if (table.length() + Long.SIZE < table.size()) {
         table = (BitSet) table.clone();
@@ -993,12 +993,12 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return table.get(c);
     }
 
     @Override
-    void setBits(BitSet bitSet) {
+    void setBits(final BitSet bitSet) {
       bitSet.or(table);
     }
   }
@@ -1015,54 +1015,54 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return true;
     }
 
     @Override
-    public int indexIn(CharSequence sequence) {
+    public int indexIn(final CharSequence sequence) {
       return (sequence.length() == 0) ? -1 : 0;
     }
 
     @Override
-    public int indexIn(CharSequence sequence, int start) {
-      int length = sequence.length();
+    public int indexIn(final CharSequence sequence, final int start) {
+      final int length = sequence.length();
       checkPositionIndex(start, length);
       return (start == length) ? -1 : start;
     }
 
     @Override
-    public int lastIndexIn(CharSequence sequence) {
+    public int lastIndexIn(final CharSequence sequence) {
       return sequence.length() - 1;
     }
 
     @Override
-    public boolean matchesAllOf(CharSequence sequence) {
+    public boolean matchesAllOf(final CharSequence sequence) {
       checkNotNull(sequence);
       return true;
     }
 
     @Override
-    public boolean matchesNoneOf(CharSequence sequence) {
+    public boolean matchesNoneOf(final CharSequence sequence) {
       return sequence.length() == 0;
     }
 
     @Override
-    public String removeFrom(CharSequence sequence) {
+    public String removeFrom(final CharSequence sequence) {
       checkNotNull(sequence);
       return "";
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, char replacement) {
-      char[] array = new char[sequence.length()];
+    public String replaceFrom(final CharSequence sequence, final char replacement) {
+      final char[] array = new char[sequence.length()];
       Arrays.fill(array, replacement);
       return new String(array);
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, CharSequence replacement) {
-      StringBuilder result = new StringBuilder(sequence.length() * replacement.length());
+    public String replaceFrom(final CharSequence sequence, final CharSequence replacement) {
+      final StringBuilder result = new StringBuilder(sequence.length() * replacement.length());
       for (int i = 0; i < sequence.length(); i++) {
         result.append(replacement);
       }
@@ -1070,28 +1070,28 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public String collapseFrom(CharSequence sequence, char replacement) {
+    public String collapseFrom(final CharSequence sequence, final char replacement) {
       return (sequence.length() == 0) ? "" : String.valueOf(replacement);
     }
 
     @Override
-    public String trimFrom(CharSequence sequence) {
+    public String trimFrom(final CharSequence sequence) {
       checkNotNull(sequence);
       return "";
     }
 
     @Override
-    public int countIn(CharSequence sequence) {
+    public int countIn(final CharSequence sequence) {
       return sequence.length();
     }
 
     @Override
-    public CharMatcher and(CharMatcher other) {
+    public CharMatcher and(final CharMatcher other) {
       return checkNotNull(other);
     }
 
     @Override
-    public CharMatcher or(CharMatcher other) {
+    public CharMatcher or(final CharMatcher other) {
       checkNotNull(other);
       return this;
     }
@@ -1112,90 +1112,90 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return false;
     }
 
     @Override
-    public int indexIn(CharSequence sequence) {
+    public int indexIn(final CharSequence sequence) {
       checkNotNull(sequence);
       return -1;
     }
 
     @Override
-    public int indexIn(CharSequence sequence, int start) {
-      int length = sequence.length();
+    public int indexIn(final CharSequence sequence, final int start) {
+      final int length = sequence.length();
       checkPositionIndex(start, length);
       return -1;
     }
 
     @Override
-    public int lastIndexIn(CharSequence sequence) {
+    public int lastIndexIn(final CharSequence sequence) {
       checkNotNull(sequence);
       return -1;
     }
 
     @Override
-    public boolean matchesAllOf(CharSequence sequence) {
+    public boolean matchesAllOf(final CharSequence sequence) {
       return sequence.length() == 0;
     }
 
     @Override
-    public boolean matchesNoneOf(CharSequence sequence) {
+    public boolean matchesNoneOf(final CharSequence sequence) {
       checkNotNull(sequence);
       return true;
     }
 
     @Override
-    public String removeFrom(CharSequence sequence) {
+    public String removeFrom(final CharSequence sequence) {
       return sequence.toString();
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, char replacement) {
+    public String replaceFrom(final CharSequence sequence, final char replacement) {
       return sequence.toString();
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, CharSequence replacement) {
+    public String replaceFrom(final CharSequence sequence, final CharSequence replacement) {
       checkNotNull(replacement);
       return sequence.toString();
     }
 
     @Override
-    public String collapseFrom(CharSequence sequence, char replacement) {
+    public String collapseFrom(final CharSequence sequence, final char replacement) {
       return sequence.toString();
     }
 
     @Override
-    public String trimFrom(CharSequence sequence) {
+    public String trimFrom(final CharSequence sequence) {
       return sequence.toString();
     }
 
     @Override
-    public String trimLeadingFrom(CharSequence sequence) {
+    public String trimLeadingFrom(final CharSequence sequence) {
       return sequence.toString();
     }
 
     @Override
-    public String trimTrailingFrom(CharSequence sequence) {
+    public String trimTrailingFrom(final CharSequence sequence) {
       return sequence.toString();
     }
 
     @Override
-    public int countIn(CharSequence sequence) {
+    public int countIn(final CharSequence sequence) {
       checkNotNull(sequence);
       return 0;
     }
 
     @Override
-    public CharMatcher and(CharMatcher other) {
+    public CharMatcher and(final CharMatcher other) {
       checkNotNull(other);
       return this;
     }
 
     @Override
-    public CharMatcher or(CharMatcher other) {
+    public CharMatcher or(final CharMatcher other) {
       return checkNotNull(other);
     }
 
@@ -1224,13 +1224,13 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return TABLE.charAt((MULTIPLIER * c) >>> SHIFT) == c;
     }
 
     @GwtIncompatible // used only from other GwtIncompatible code
     @Override
-    void setBits(BitSet table) {
+    void setBits(final BitSet table) {
       for (int i = 0; i < TABLE.length(); i++) {
         table.set(TABLE.charAt(i));
       }
@@ -1243,7 +1243,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     static final CharMatcher INSTANCE = new BreakingWhitespace();
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       switch (c) {
         case '\t':
         case '\n':
@@ -1281,7 +1281,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return c <= '\u007f';
     }
   }
@@ -1293,7 +1293,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     private final char[] rangeStarts;
     private final char[] rangeEnds;
 
-    RangesMatcher(String description, char[] rangeStarts, char[] rangeEnds) {
+    RangesMatcher(final String description, final char[] rangeStarts, final char[] rangeEnds) {
       this.description = description;
       this.rangeStarts = rangeStarts;
       this.rangeEnds = rangeEnds;
@@ -1307,7 +1307,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       int index = Arrays.binarySearch(rangeStarts, c);
       if (index >= 0) {
         return true;
@@ -1341,7 +1341,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     private static char[] nines() {
-      char[] nines = new char[ZEROES.length()];
+      final char[] nines = new char[ZEROES.length()];
       for (int i = 0; i < ZEROES.length(); i++) {
         nines[i] = (char) (ZEROES.charAt(i) + 9);
       }
@@ -1361,7 +1361,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     static final JavaDigit INSTANCE = new JavaDigit();
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return Character.isDigit(c);
     }
 
@@ -1377,7 +1377,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     static final JavaLetter INSTANCE = new JavaLetter();
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return Character.isLetter(c);
     }
 
@@ -1393,7 +1393,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     static final JavaLetterOrDigit INSTANCE = new JavaLetterOrDigit();
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return Character.isLetterOrDigit(c);
     }
 
@@ -1409,7 +1409,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     static final JavaUpperCase INSTANCE = new JavaUpperCase();
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return Character.isUpperCase(c);
     }
 
@@ -1425,7 +1425,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     static final JavaLowerCase INSTANCE = new JavaLowerCase();
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return Character.isLowerCase(c);
     }
 
@@ -1445,7 +1445,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return c <= '\u001f' || (c >= '\u007f' && c <= '\u009f');
     }
   }
@@ -1490,34 +1490,34 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     final CharMatcher original;
 
-    Negated(CharMatcher original) {
+    Negated(final CharMatcher original) {
       this.original = checkNotNull(original);
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return !original.matches(c);
     }
 
     @Override
-    public boolean matchesAllOf(CharSequence sequence) {
+    public boolean matchesAllOf(final CharSequence sequence) {
       return original.matchesNoneOf(sequence);
     }
 
     @Override
-    public boolean matchesNoneOf(CharSequence sequence) {
+    public boolean matchesNoneOf(final CharSequence sequence) {
       return original.matchesAllOf(sequence);
     }
 
     @Override
-    public int countIn(CharSequence sequence) {
+    public int countIn(final CharSequence sequence) {
       return sequence.length() - original.countIn(sequence);
     }
 
     @GwtIncompatible // used only from other GwtIncompatible code
     @Override
-    void setBits(BitSet table) {
-      BitSet tmp = new BitSet();
+    void setBits(final BitSet table) {
+      final BitSet tmp = new BitSet();
       original.setBits(tmp);
       tmp.flip(Character.MIN_VALUE, Character.MAX_VALUE + 1);
       table.or(tmp);
@@ -1540,22 +1540,22 @@ public abstract class CharMatcher implements Predicate<Character> {
     final CharMatcher first;
     final CharMatcher second;
 
-    And(CharMatcher a, CharMatcher b) {
+    And(final CharMatcher a, final CharMatcher b) {
       first = checkNotNull(a);
       second = checkNotNull(b);
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return first.matches(c) && second.matches(c);
     }
 
     @GwtIncompatible // used only from other GwtIncompatible code
     @Override
-    void setBits(BitSet table) {
-      BitSet tmp1 = new BitSet();
+    void setBits(final BitSet table) {
+      final BitSet tmp1 = new BitSet();
       first.setBits(tmp1);
-      BitSet tmp2 = new BitSet();
+      final BitSet tmp2 = new BitSet();
       second.setBits(tmp2);
       tmp1.and(tmp2);
       table.or(tmp1);
@@ -1573,20 +1573,20 @@ public abstract class CharMatcher implements Predicate<Character> {
     final CharMatcher first;
     final CharMatcher second;
 
-    Or(CharMatcher a, CharMatcher b) {
+    Or(final CharMatcher a, final CharMatcher b) {
       first = checkNotNull(a);
       second = checkNotNull(b);
     }
 
     @GwtIncompatible // used only from other GwtIncompatible code
     @Override
-    void setBits(BitSet table) {
+    void setBits(final BitSet table) {
       first.setBits(table);
       second.setBits(table);
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return first.matches(c) || second.matches(c);
     }
 
@@ -1603,27 +1603,27 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     private final char match;
 
-    Is(char match) {
+    Is(final char match) {
       this.match = match;
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return c == match;
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, char replacement) {
+    public String replaceFrom(final CharSequence sequence, final char replacement) {
       return sequence.toString().replace(match, replacement);
     }
 
     @Override
-    public CharMatcher and(CharMatcher other) {
+    public CharMatcher and(final CharMatcher other) {
       return other.matches(match) ? this : none();
     }
 
     @Override
-    public CharMatcher or(CharMatcher other) {
+    public CharMatcher or(final CharMatcher other) {
       return other.matches(match) ? other : super.or(other);
     }
 
@@ -1634,7 +1634,7 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     @GwtIncompatible // used only from other GwtIncompatible code
     @Override
-    void setBits(BitSet table) {
+    void setBits(final BitSet table) {
       table.set(match);
     }
 
@@ -1649,28 +1649,28 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     private final char match;
 
-    IsNot(char match) {
+    IsNot(final char match) {
       this.match = match;
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return c != match;
     }
 
     @Override
-    public CharMatcher and(CharMatcher other) {
+    public CharMatcher and(final CharMatcher other) {
       return other.matches(match) ? super.and(other) : other;
     }
 
     @Override
-    public CharMatcher or(CharMatcher other) {
+    public CharMatcher or(final CharMatcher other) {
       return other.matches(match) ? any() : this;
     }
 
     @GwtIncompatible // used only from other GwtIncompatible code
     @Override
-    void setBits(BitSet table) {
+    void setBits(final BitSet table) {
       table.set(0, match);
       table.set(match + 1, Character.MAX_VALUE + 1);
     }
@@ -1686,7 +1686,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
   }
 
-  private static CharMatcher.IsEither isEither(char c1, char c2) {
+  private static CharMatcher.IsEither isEither(final char c1, final char c2) {
     return new CharMatcher.IsEither(c1, c2);
   }
 
@@ -1696,19 +1696,19 @@ public abstract class CharMatcher implements Predicate<Character> {
     private final char match1;
     private final char match2;
 
-    IsEither(char match1, char match2) {
+    IsEither(final char match1, final char match2) {
       this.match1 = match1;
       this.match2 = match2;
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return c == match1 || c == match2;
     }
 
     @GwtIncompatible // used only from other GwtIncompatible code
     @Override
-    void setBits(BitSet table) {
+    void setBits(final BitSet table) {
       table.set(match1);
       table.set(match2);
     }
@@ -1724,28 +1724,28 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     private final char[] chars;
 
-    public AnyOf(CharSequence chars) {
+    public AnyOf(final CharSequence chars) {
       this.chars = chars.toString().toCharArray();
       Arrays.sort(this.chars);
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return Arrays.binarySearch(chars, c) >= 0;
     }
 
     @Override
     @GwtIncompatible // used only from other GwtIncompatible code
-    void setBits(BitSet table) {
-      for (char c : chars) {
+    void setBits(final BitSet table) {
+      for (final char c : chars) {
         table.set(c);
       }
     }
 
     @Override
     public String toString() {
-      StringBuilder description = new StringBuilder("CharMatcher.anyOf(\"");
-      for (char c : chars) {
+      final StringBuilder description = new StringBuilder("CharMatcher.anyOf(\"");
+      for (final char c : chars) {
         description.append(showCharacter(c));
       }
       description.append("\")");
@@ -1759,20 +1759,20 @@ public abstract class CharMatcher implements Predicate<Character> {
     private final char startInclusive;
     private final char endInclusive;
 
-    InRange(char startInclusive, char endInclusive) {
+    InRange(final char startInclusive, final char endInclusive) {
       checkArgument(endInclusive >= startInclusive);
       this.startInclusive = startInclusive;
       this.endInclusive = endInclusive;
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return startInclusive <= c && c <= endInclusive;
     }
 
     @GwtIncompatible // used only from other GwtIncompatible code
     @Override
-    void setBits(BitSet table) {
+    void setBits(final BitSet table) {
       table.set(startInclusive, endInclusive + 1);
     }
 
@@ -1791,18 +1791,17 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     private final Predicate<? super Character> predicate;
 
-    ForPredicate(Predicate<? super Character> predicate) {
+    ForPredicate(final Predicate<? super Character> predicate) {
       this.predicate = checkNotNull(predicate);
     }
 
     @Override
-    public boolean matches(char c) {
+    public boolean matches(final char c) {
       return predicate.apply(c);
     }
 
-    @SuppressWarnings("deprecation") // intentional; deprecation is for callers primarily
     @Override
-    public boolean apply(Character character) {
+    public boolean apply(final Character character) {
       return predicate.apply(checkNotNull(character));
     }
 

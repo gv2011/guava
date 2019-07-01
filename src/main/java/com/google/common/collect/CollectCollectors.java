@@ -28,8 +28,8 @@ import java.util.stream.Collector;
 @GwtCompatible
 final class CollectCollectors {
   static <T, K, V> Collector<T, ?, ImmutableBiMap<K, V>> toImmutableBiMap(
-      Function<? super T, ? extends K> keyFunction,
-      Function<? super T, ? extends V> valueFunction) {
+      final Function<? super T, ? extends K> keyFunction,
+      final Function<? super T, ? extends V> valueFunction) {
     checkNotNull(keyFunction);
     checkNotNull(valueFunction);
     return Collector.of(
@@ -47,13 +47,14 @@ final class CollectCollectors {
           ImmutableList.Builder::combine,
           ImmutableList.Builder::build);
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   static <E> Collector<E, ?, ImmutableList<E>> toImmutableList() {
     return (Collector) TO_IMMUTABLE_LIST;
   }
 
   static <T, K, V> Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
-      Function<? super T, ? extends K> keyFunction,
-      Function<? super T, ? extends V> valueFunction) {
+      final Function<? super T, ? extends K> keyFunction,
+      final Function<? super T, ? extends V> valueFunction) {
     checkNotNull(keyFunction);
     checkNotNull(valueFunction);
     return Collector.of(
@@ -70,14 +71,15 @@ final class CollectCollectors {
           ImmutableSet.Builder::combine,
           ImmutableSet.Builder::build);
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   static <E> Collector<E, ?, ImmutableSet<E>> toImmutableSet() {
     return (Collector) TO_IMMUTABLE_SET;
   }
 
   static <T, K, V> Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-      Comparator<? super K> comparator,
-      Function<? super T, ? extends K> keyFunction,
-      Function<? super T, ? extends V> valueFunction) {
+      final Comparator<? super K> comparator,
+      final Function<? super T, ? extends K> keyFunction,
+      final Function<? super T, ? extends V> valueFunction) {
     checkNotNull(comparator);
     checkNotNull(keyFunction);
     checkNotNull(valueFunction);
@@ -94,7 +96,7 @@ final class CollectCollectors {
   }
 
   static <E> Collector<E, ?, ImmutableSortedSet<E>> toImmutableSortedSet(
-      Comparator<? super E> comparator) {
+      final Comparator<? super E> comparator) {
     checkNotNull(comparator);
     return Collector.of(
         () -> new ImmutableSortedSet.Builder<E>(comparator),
@@ -103,6 +105,7 @@ final class CollectCollectors {
         ImmutableSortedSet.Builder::build);
   }
 
+  @SuppressWarnings("rawtypes")
   @GwtIncompatible
   private static final Collector<Range<Comparable>, ?, ImmutableRangeSet<Comparable>>
       TO_IMMUTABLE_RANGE_SET =
@@ -112,6 +115,7 @@ final class CollectCollectors {
               ImmutableRangeSet.Builder::combine,
               ImmutableRangeSet.Builder::build);
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @GwtIncompatible
   static <E extends Comparable<? super E>>
       Collector<Range<E>, ?, ImmutableRangeSet<E>> toImmutableRangeSet() {
@@ -121,8 +125,8 @@ final class CollectCollectors {
   @GwtIncompatible
   static <T, K extends Comparable<? super K>, V>
       Collector<T, ?, ImmutableRangeMap<K, V>> toImmutableRangeMap(
-          Function<? super T, Range<K>> keyFunction,
-          Function<? super T, ? extends V> valueFunction) {
+          final Function<? super T, Range<K>> keyFunction,
+          final Function<? super T, ? extends V> valueFunction) {
     checkNotNull(keyFunction);
     checkNotNull(valueFunction);
     return Collector.of(

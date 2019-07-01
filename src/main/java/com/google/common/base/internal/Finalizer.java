@@ -137,7 +137,6 @@ public class Finalizer implements Runnable {
   }
 
   /** Loops continuously, pulling references off the queue and cleaning them up. */
-  @SuppressWarnings("InfiniteLoopStatement")
   @Override
   public void run() {
     while (true) {

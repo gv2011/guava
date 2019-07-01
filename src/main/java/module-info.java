@@ -5,4 +5,5 @@ module com.github.gv2011.guava {
   requires java.base;
 
   exports com.google.common.collect;
+  exports com.google.common.base;
 }

@@ -80,7 +80,6 @@ import java.util.concurrent.TimeUnit;
  * @since 10.0
  */
 @GwtCompatible(emulated = true)
-@SuppressWarnings("GoodTime") // lots of violations
 public final class Stopwatch {
   private final Ticker ticker;
   private boolean isRunning;
@@ -101,7 +100,7 @@ public final class Stopwatch {
    *
    * @since 15.0
    */
-  public static Stopwatch createUnstarted(Ticker ticker) {
+  public static Stopwatch createUnstarted(final Ticker ticker) {
     return new Stopwatch(ticker);
   }
 
@@ -119,15 +118,15 @@ public final class Stopwatch {
    *
    * @since 15.0
    */
-  public static Stopwatch createStarted(Ticker ticker) {
+  public static Stopwatch createStarted(final Ticker ticker) {
     return new Stopwatch(ticker).start();
   }
 
   Stopwatch() {
-    this.ticker = Ticker.systemTicker();
+    ticker = Ticker.systemTicker();
   }
 
-  Stopwatch(Ticker ticker) {
+  Stopwatch(final Ticker ticker) {
     this.ticker = checkNotNull(ticker, "ticker");
   }
 
@@ -162,7 +161,7 @@ public final class Stopwatch {
    */
   @CanIgnoreReturnValue
   public Stopwatch stop() {
-    long tick = ticker.read();
+    final long tick = ticker.read();
     checkState(isRunning, "This stopwatch is already stopped.");
     isRunning = false;
     elapsedNanos += tick - startTick;
@@ -198,7 +197,7 @@ public final class Stopwatch {
    *
    * @since 14.0 (since 10.0 as {@code elapsedTime()})
    */
-  public long elapsed(TimeUnit desiredUnit) {
+  public long elapsed(final TimeUnit desiredUnit) {
     return desiredUnit.convert(elapsedNanos(), NANOSECONDS);
   }
 
@@ -217,16 +216,16 @@ public final class Stopwatch {
   /** Returns a string representation of the current elapsed time. */
   @Override
   public String toString() {
-    long nanos = elapsedNanos();
+    final long nanos = elapsedNanos();
 
-    TimeUnit unit = chooseUnit(nanos);
-    double value = (double) nanos / NANOSECONDS.convert(1, unit);
+    final TimeUnit unit = chooseUnit(nanos);
+    final double value = (double) nanos / NANOSECONDS.convert(1, unit);
 
     // Too bad this functionality is not exposed as a regular method call
     return Platform.formatCompact4Digits(value) + " " + abbreviate(unit);
   }
 
-  private static TimeUnit chooseUnit(long nanos) {
+  private static TimeUnit chooseUnit(final long nanos) {
     if (DAYS.convert(nanos, NANOSECONDS) > 0) {
       return DAYS;
     }
@@ -248,7 +247,7 @@ public final class Stopwatch {
     return NANOSECONDS;
   }
 
-  private static String abbreviate(TimeUnit unit) {
+  private static String abbreviate(final TimeUnit unit) {
     switch (unit) {
       case NANOSECONDS:
         return "ns";

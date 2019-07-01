@@ -60,8 +60,8 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
    * @param collection the elements that the set should contain
    * @return a new {@code CompactLinkedHashSet} containing those elements (minus duplicates)
    */
-  public static <E> CompactLinkedHashSet<E> create(Collection<? extends E> collection) {
-    CompactLinkedHashSet<E> set = createWithExpectedSize(collection.size());
+  public static <E> CompactLinkedHashSet<E> create(final Collection<? extends E> collection) {
+    final CompactLinkedHashSet<E> set = createWithExpectedSize(collection.size());
     set.addAll(collection);
     return set;
   }
@@ -73,8 +73,9 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
    * @param elements the elements that the set should contain
    * @return a new {@code CompactLinkedHashSet} containing those elements (minus duplicates)
    */
-  public static <E> CompactLinkedHashSet<E> create(E... elements) {
-    CompactLinkedHashSet<E> set = createWithExpectedSize(elements.length);
+  @SafeVarargs
+  public static <E> CompactLinkedHashSet<E> create(final E... elements) {
+    final CompactLinkedHashSet<E> set = createWithExpectedSize(elements.length);
     Collections.addAll(set, elements);
     return set;
   }
@@ -88,7 +89,7 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
    *     expectedSize} elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <E> CompactLinkedHashSet<E> createWithExpectedSize(int expectedSize) {
+  public static <E> CompactLinkedHashSet<E> createWithExpectedSize(final int expectedSize) {
     return new CompactLinkedHashSet<>(expectedSize);
   }
 
@@ -120,12 +121,12 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
     super();
   }
 
-  CompactLinkedHashSet(int expectedSize) {
+  CompactLinkedHashSet(final int expectedSize) {
     super(expectedSize);
   }
 
   @Override
-  void init(int expectedSize) {
+  void init(final int expectedSize) {
     super.init(expectedSize);
     this.firstEntry = ENDPOINT;
     this.lastEntry = ENDPOINT;
@@ -134,31 +135,31 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
   @Override
   void allocArrays() {
     super.allocArrays();
-    int expectedSize = elements.length; // allocated size may be different than initial capacity
+    final int expectedSize = elements.length; // allocated size may be different than initial capacity
     this.predecessor = new int[expectedSize];
     this.successor = new int[expectedSize];
     Arrays.fill(predecessor, UNSET);
     Arrays.fill(successor, UNSET);
   }
 
-  private int getPredecessor(int entry) {
+  private int getPredecessor(final int entry) {
     return predecessor[entry];
   }
 
   @Override
-  int getSuccessor(int entry) {
+  int getSuccessor(final int entry) {
     return successor[entry];
   }
 
-  private void setSuccessor(int entry, int succ) {
+  private void setSuccessor(final int entry, final int succ) {
     successor[entry] = succ;
   }
 
-  private void setPredecessor(int entry, int pred) {
+  private void setPredecessor(final int entry, final int pred) {
     predecessor[entry] = pred;
   }
 
-  private void setSucceeds(int pred, int succ) {
+  private void setSucceeds(final int pred, final int succ) {
     if (pred == ENDPOINT) {
       firstEntry = succ;
     } else {
@@ -173,15 +174,15 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
   }
 
   @Override
-  void insertEntry(int entryIndex, E object, int hash) {
+  void insertEntry(final int entryIndex, final E object, final int hash) {
     super.insertEntry(entryIndex, object, hash);
     setSucceeds(lastEntry, entryIndex);
     setSucceeds(entryIndex, ENDPOINT);
   }
 
   @Override
-  void moveLastEntry(int dstIndex) {
-    int srcIndex = size() - 1;
+  void moveLastEntry(final int dstIndex) {
+    final int srcIndex = size() - 1;
     super.moveLastEntry(dstIndex);
 
     setSucceeds(getPredecessor(dstIndex), getSuccessor(dstIndex));
@@ -194,9 +195,9 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
   }
 
   @Override
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(final int newCapacity) {
     super.resizeEntries(newCapacity);
-    int oldCapacity = predecessor.length;
+    final int oldCapacity = predecessor.length;
     predecessor = Arrays.copyOf(predecessor, newCapacity);
     successor = Arrays.copyOf(successor, newCapacity);
     if (oldCapacity < newCapacity) {
@@ -211,7 +212,7 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
   }
 
   @Override
-  int adjustAfterRemove(int indexBeforeRemove, int indexRemoved) {
+  int adjustAfterRemove(final int indexBeforeRemove, final int indexRemoved) {
     return (indexBeforeRemove >= size()) ? indexRemoved : indexBeforeRemove;
   }
 
@@ -221,7 +222,7 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
   }
 
   @Override
-  public <T> T[] toArray(T[] a) {
+  public <T> T[] toArray(final T[] a) {
     return ObjectArrays.toArrayImpl(this, a);
   }
 

@@ -38,12 +38,12 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
   @GwtTransient final Comparator<? super E> comparator;
 
   // needed for serialization
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   AbstractSortedMultiset() {
     this((Comparator) Ordering.natural());
   }
 
-  AbstractSortedMultiset(Comparator<? super E> comparator) {
+  AbstractSortedMultiset(final Comparator<? super E> comparator) {
     this.comparator = checkNotNull(comparator);
   }
 
@@ -64,19 +64,19 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
 
   @Override
   public Entry<E> firstEntry() {
-    Iterator<Entry<E>> entryIterator = entryIterator();
+    final Iterator<Entry<E>> entryIterator = entryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
   @Override
   public Entry<E> lastEntry() {
-    Iterator<Entry<E>> entryIterator = descendingEntryIterator();
+    final Iterator<Entry<E>> entryIterator = descendingEntryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
   @Override
   public Entry<E> pollFirstEntry() {
-    Iterator<Entry<E>> entryIterator = entryIterator();
+    final Iterator<Entry<E>> entryIterator = entryIterator();
     if (entryIterator.hasNext()) {
       Entry<E> result = entryIterator.next();
       result = Multisets.immutableEntry(result.getElement(), result.getCount());
@@ -88,7 +88,7 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
 
   @Override
   public Entry<E> pollLastEntry() {
-    Iterator<Entry<E>> entryIterator = descendingEntryIterator();
+    final Iterator<Entry<E>> entryIterator = descendingEntryIterator();
     if (entryIterator.hasNext()) {
       Entry<E> result = entryIterator.next();
       result = Multisets.immutableEntry(result.getElement(), result.getCount());
@@ -100,10 +100,10 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
 
   @Override
   public SortedMultiset<E> subMultiset(
-      @Nullable E fromElement,
-      BoundType fromBoundType,
-      @Nullable E toElement,
-      BoundType toBoundType) {
+      @Nullable final E fromElement,
+      final BoundType fromBoundType,
+      @Nullable final E toElement,
+      final BoundType toBoundType) {
     // These are checked elsewhere, but NullPointerTester wants them checked eagerly.
     checkNotNull(fromBoundType);
     checkNotNull(toBoundType);
@@ -120,7 +120,7 @@ abstract class AbstractSortedMultiset<E> extends AbstractMultiset<E> implements 
 
   @Override
   public SortedMultiset<E> descendingMultiset() {
-    SortedMultiset<E> result = descendingMultiset;
+    final SortedMultiset<E> result = descendingMultiset;
     return (result == null) ? descendingMultiset = createDescendingMultiset() : result;
   }
 

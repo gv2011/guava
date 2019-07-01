@@ -85,8 +85,8 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
    * @param collection the elements that the set should contain
    * @return a new {@code CompactHashSet} containing those elements (minus duplicates)
    */
-  public static <E> CompactHashSet<E> create(Collection<? extends E> collection) {
-    CompactHashSet<E> set = createWithExpectedSize(collection.size());
+  public static <E> CompactHashSet<E> create(final Collection<? extends E> collection) {
+    final CompactHashSet<E> set = createWithExpectedSize(collection.size());
     set.addAll(collection);
     return set;
   }
@@ -98,8 +98,9 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
    * @param elements the elements that the set should contain
    * @return a new {@code CompactHashSet} containing those elements (minus duplicates)
    */
-  public static <E> CompactHashSet<E> create(E... elements) {
-    CompactHashSet<E> set = createWithExpectedSize(elements.length);
+  @SafeVarargs
+  public static <E> CompactHashSet<E> create(final E... elements) {
+    final CompactHashSet<E> set = createWithExpectedSize(elements.length);
     Collections.addAll(set, elements);
     return set;
   }
@@ -113,7 +114,7 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
    *     elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <E> CompactHashSet<E> createWithExpectedSize(int expectedSize) {
+  public static <E> CompactHashSet<E> createWithExpectedSize(final int expectedSize) {
     return new CompactHashSet<>(expectedSize);
   }
 
@@ -175,12 +176,12 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
    *
    * @param expectedSize the initial capacity of this {@code CompactHashSet}.
    */
-  CompactHashSet(int expectedSize) {
+  CompactHashSet(final int expectedSize) {
     init(expectedSize);
   }
 
   /** Pseudoconstructor for serialization support. */
-  void init(int expectedSize) {
+  void init(final int expectedSize) {
     Preconditions.checkArgument(expectedSize >= 0, "Initial capacity must be non-negative");
     this.modCount = Math.max(1, expectedSize); // Save expectedSize for use in allocArrays()
   }
@@ -194,22 +195,22 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
   void allocArrays() {
     Preconditions.checkState(needsAllocArrays(), "Arrays already allocated");
 
-    int expectedSize = modCount;
-    int buckets = Hashing.closedTableSize(expectedSize, LOAD_FACTOR);
+    final int expectedSize = modCount;
+    final int buckets = Hashing.closedTableSize(expectedSize, LOAD_FACTOR);
     this.table = newTable(buckets);
 
     this.entries = newEntries(expectedSize);
     this.elements = new Object[expectedSize];
   }
 
-  private static int[] newTable(int size) {
-    int[] array = new int[size];
+  private static int[] newTable(final int size) {
+    final int[] array = new int[size];
     Arrays.fill(array, UNSET);
     return array;
   }
 
-  private static long[] newEntries(int size) {
-    long[] array = new long[size];
+  private static long[] newEntries(final int size) {
+    final long[] array = new long[size];
     Arrays.fill(array, UNSET);
     return array;
   }
@@ -218,32 +219,32 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
     return table.length - 1;
   }
 
-  private static int getHash(long entry) {
+  private static int getHash(final long entry) {
     return (int) (entry >>> 32);
   }
 
   /** Returns the index, or UNSET if the pointer is "null" */
-  private static int getNext(long entry) {
+  private static int getNext(final long entry) {
     return (int) entry;
   }
 
   /** Returns a new entry value by changing the "next" index of an existing entry */
-  private static long swapNext(long entry, int newNext) {
+  private static long swapNext(final long entry, final int newNext) {
     return (HASH_MASK & entry) | (NEXT_MASK & newNext);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean add(@Nullable E object) {
+  public boolean add(@Nullable final E object) {
     if (needsAllocArrays()) {
       allocArrays();
     }
-    long[] entries = this.entries;
-    Object[] elements = this.elements;
+    final long[] entries = this.entries;
+    final Object[] elements = this.elements;
 
-    int hash = smearedHash(object);
-    int tableIndex = hash & hashTableMask();
-    int newEntryIndex = this.size; // current size, and pointer to the entry to be appended
+    final int hash = smearedHash(object);
+    final int tableIndex = hash & hashTableMask();
+    final int newEntryIndex = this.size; // current size, and pointer to the entry to be appended
     int next = table[tableIndex];
     if (next == UNSET) { // uninitialized bucket
       table[tableIndex] = newEntryIndex;
@@ -263,11 +264,11 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
     if (newEntryIndex == Integer.MAX_VALUE) {
       throw new IllegalStateException("Cannot contain more than Integer.MAX_VALUE elements!");
     }
-    int newSize = newEntryIndex + 1;
+    final int newSize = newEntryIndex + 1;
     resizeMeMaybe(newSize);
     insertEntry(newEntryIndex, object, hash);
     this.size = newSize;
-    int oldCapacity = table.length;
+    final int oldCapacity = table.length;
     if (Hashing.needsResizing(newEntryIndex, oldCapacity, LOAD_FACTOR)) {
       resizeTable(2 * oldCapacity);
     }
@@ -278,14 +279,14 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
   /**
    * Creates a fresh entry with the specified object at the specified position in the entry arrays.
    */
-  void insertEntry(int entryIndex, E object, int hash) {
+  void insertEntry(final int entryIndex, final E object, final int hash) {
     this.entries[entryIndex] = ((long) hash << 32) | (NEXT_MASK & UNSET);
     this.elements[entryIndex] = object;
   }
 
   /** Resizes the entries storage if necessary. */
-  private void resizeMeMaybe(int newSize) {
-    int entriesSize = entries.length;
+  private void resizeMeMaybe(final int newSize) {
+    final int entriesSize = entries.length;
     if (newSize > entriesSize) {
       int newCapacity = entriesSize + Math.max(1, entriesSize >>> 1);
       if (newCapacity < 0) {
@@ -301,10 +302,10 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
    * Resizes the internal entries array to the specified capacity, which may be greater or less than
    * the current capacity.
    */
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(final int newCapacity) {
     this.elements = Arrays.copyOf(elements, newCapacity);
     long[] entries = this.entries;
-    int oldCapacity = entries.length;
+    final int oldCapacity = entries.length;
     entries = Arrays.copyOf(entries, newCapacity);
     if (newCapacity > oldCapacity) {
       Arrays.fill(entries, oldCapacity, newCapacity, UNSET);
@@ -312,16 +313,16 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
     this.entries = entries;
   }
 
-  private void resizeTable(int newCapacity) { // newCapacity always a power of two
-    int[] newTable = newTable(newCapacity);
-    long[] entries = this.entries;
+  private void resizeTable(final int newCapacity) { // newCapacity always a power of two
+    final int[] newTable = newTable(newCapacity);
+    final long[] entries = this.entries;
 
-    int mask = newTable.length - 1;
+    final int mask = newTable.length - 1;
     for (int i = 0; i < size; i++) {
-      long oldEntry = entries[i];
-      int hash = getHash(oldEntry);
-      int tableIndex = hash & mask;
-      int next = newTable[tableIndex];
+      final long oldEntry = entries[i];
+      final int hash = getHash(oldEntry);
+      final int tableIndex = hash & mask;
+      final int next = newTable[tableIndex];
       newTable[tableIndex] = i;
       entries[i] = ((long) hash << 32) | (NEXT_MASK & next);
     }
@@ -330,14 +331,14 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
   }
 
   @Override
-  public boolean contains(@Nullable Object object) {
+  public boolean contains(@Nullable final Object object) {
     if (needsAllocArrays()) {
       return false;
     }
-    int hash = smearedHash(object);
+    final int hash = smearedHash(object);
     int next = table[hash & hashTableMask()];
     while (next != UNSET) {
-      long entry = entries[next];
+      final long entry = entries[next];
       if (getHash(entry) == hash && Objects.equal(object, elements[next])) {
         return true;
       }
@@ -348,7 +349,7 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@Nullable Object object) {
+  public boolean remove(@Nullable final Object object) {
     if (needsAllocArrays()) {
       return false;
     }
@@ -356,8 +357,8 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
   }
 
   @CanIgnoreReturnValue
-  private boolean remove(Object object, int hash) {
-    int tableIndex = hash & hashTableMask();
+  private boolean remove(final Object object, final int hash) {
+    final int tableIndex = hash & hashTableMask();
     int next = table[tableIndex];
     if (next == UNSET) {
       return false;
@@ -387,21 +388,21 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
   /**
    * Moves the last entry in the entry array into {@code dstIndex}, and nulls out its old position.
    */
-  void moveLastEntry(int dstIndex) {
-    int srcIndex = size() - 1;
+  void moveLastEntry(final int dstIndex) {
+    final int srcIndex = size() - 1;
     if (dstIndex < srcIndex) {
       // move last entry to deleted spot
       elements[dstIndex] = elements[srcIndex];
       elements[srcIndex] = null;
 
       // move the last entry to the removed spot, just like we moved the element
-      long lastEntry = entries[srcIndex];
+      final long lastEntry = entries[srcIndex];
       entries[dstIndex] = lastEntry;
       entries[srcIndex] = UNSET;
 
       // also need to update whoever's "next" pointer was pointing to the last entry place
       // reusing "tableIndex" and "next"; these variables were no longer needed
-      int tableIndex = getHash(lastEntry) & hashTableMask();
+      final int tableIndex = getHash(lastEntry) & hashTableMask();
       int lastNext = table[tableIndex];
       if (lastNext == srcIndex) {
         // we need to update the root pointer
@@ -427,7 +428,7 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
     return isEmpty() ? -1 : 0;
   }
 
-  int getSuccessor(int entryIndex) {
+  int getSuccessor(final int entryIndex) {
     return (entryIndex + 1 < size) ? entryIndex + 1 : -1;
   }
 
@@ -436,7 +437,7 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
    * entry that should be looked at after a removal on indexRemoved, with indexBeforeRemove as the
    * index that *was* the next entry that would be looked at.
    */
-  int adjustAfterRemove(int indexBeforeRemove, @SuppressWarnings("unused") int indexRemoved) {
+  int adjustAfterRemove(final int indexBeforeRemove, @SuppressWarnings("unused") final int indexRemoved) {
     return indexBeforeRemove - 1;
   }
 
@@ -460,7 +461,7 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
           throw new NoSuchElementException();
         }
         indexToRemove = currentIndex;
-        E result = (E) elements[currentIndex];
+        final E result = (E) elements[currentIndex];
         currentIndex = getSuccessor(currentIndex);
         return result;
       }
@@ -491,8 +492,9 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
     return Spliterators.spliterator(elements, 0, size, Spliterator.DISTINCT | Spliterator.ORDERED);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public void forEach(Consumer<? super E> action) {
+  public void forEach(final Consumer<? super E> action) {
     checkNotNull(action);
     for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
       action.accept((E) elements[i]);
@@ -519,7 +521,7 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
 
   @CanIgnoreReturnValue
   @Override
-  public <T> T[] toArray(T[] a) {
+  public <T> T[] toArray(final T[] a) {
     if (needsAllocArrays()) {
       if (a.length > 0) {
         a[0] = null;
@@ -537,11 +539,11 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
     if (needsAllocArrays()) {
       return;
     }
-    int size = this.size;
+    final int size = this.size;
     if (size < entries.length) {
       resizeEntries(size);
     }
-    int minimumTableSize = Hashing.closedTableSize(size, LOAD_FACTOR);
+    final int minimumTableSize = Hashing.closedTableSize(size, LOAD_FACTOR);
     if (minimumTableSize < table.length) {
       resizeTable(minimumTableSize);
     }
@@ -559,7 +561,7 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
     this.size = 0;
   }
 
-  private void writeObject(ObjectOutputStream stream) throws IOException {
+  private void writeObject(final ObjectOutputStream stream) throws IOException {
     stream.defaultWriteObject();
     stream.writeInt(size);
     for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
@@ -568,15 +570,15 @@ class CompactHashSet<E> extends AbstractSet<E> implements Serializable {
   }
 
   @SuppressWarnings("unchecked")
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(final ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
-    int elementCount = stream.readInt();
+    final int elementCount = stream.readInt();
     if (elementCount < 0) {
       throw new InvalidObjectException("Invalid size: " + elementCount);
     }
     init(elementCount);
     for (int i = 0; i < elementCount; i++) {
-      E element = (E) stream.readObject();
+      final E element = (E) stream.readObject();
       add(element);
     }
   }

@@ -22,12 +22,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Louis Wasserman
  */
+@SuppressWarnings("rawtypes")
 @GwtIncompatible
 abstract class AbstractRangeSet<C extends Comparable> implements RangeSet<C> {
   AbstractRangeSet() {}
 
   @Override
-  public boolean contains(C value) {
+  public boolean contains(final C value) {
     return rangeContaining(value) != null;
   }
 
@@ -40,12 +41,12 @@ abstract class AbstractRangeSet<C extends Comparable> implements RangeSet<C> {
   }
 
   @Override
-  public void add(Range<C> range) {
+  public void add(final Range<C> range) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void remove(Range<C> range) {
+  public void remove(final Range<C> range) {
     throw new UnsupportedOperationException();
   }
 
@@ -55,22 +56,22 @@ abstract class AbstractRangeSet<C extends Comparable> implements RangeSet<C> {
   }
 
   @Override
-  public boolean enclosesAll(RangeSet<C> other) {
+  public boolean enclosesAll(final RangeSet<C> other) {
     return enclosesAll(other.asRanges());
   }
 
   @Override
-  public void addAll(RangeSet<C> other) {
+  public void addAll(final RangeSet<C> other) {
     addAll(other.asRanges());
   }
 
   @Override
-  public void removeAll(RangeSet<C> other) {
+  public void removeAll(final RangeSet<C> other) {
     removeAll(other.asRanges());
   }
 
   @Override
-  public boolean intersects(Range<C> otherRange) {
+  public boolean intersects(final Range<C> otherRange) {
     return !subRangeSet(otherRange).isEmpty();
   }
 
@@ -78,12 +79,12 @@ abstract class AbstractRangeSet<C extends Comparable> implements RangeSet<C> {
   public abstract boolean encloses(Range<C> otherRange);
 
   @Override
-  public boolean equals(@Nullable Object obj) {
+  public boolean equals(@Nullable final Object obj) {
     if (obj == this) {
       return true;
     } else if (obj instanceof RangeSet) {
-      RangeSet<?> other = (RangeSet<?>) obj;
-      return this.asRanges().equals(other.asRanges());
+      final RangeSet<?> other = (RangeSet<?>) obj;
+      return asRanges().equals(other.asRanges());
     }
     return false;
   }
