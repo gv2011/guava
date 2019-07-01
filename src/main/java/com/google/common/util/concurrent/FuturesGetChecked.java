@@ -36,13 +36,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
+//import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 /** Static methods used to implement {@link Futures#getChecked(Future, Class)}. */
 @GwtIncompatible
 final class FuturesGetChecked {
   @CanIgnoreReturnValue
-  static <V, X extends Exception> V getChecked(Future<V> future, Class<X> exceptionClass) throws X {
+  static <V, X extends Exception> V getChecked(final Future<V> future, final Class<X> exceptionClass) throws X {
     return getChecked(bestGetCheckedTypeValidator(), future, exceptionClass);
   }
 
@@ -50,14 +50,14 @@ final class FuturesGetChecked {
   @CanIgnoreReturnValue
   @VisibleForTesting
   static <V, X extends Exception> V getChecked(
-      GetCheckedTypeValidator validator, Future<V> future, Class<X> exceptionClass) throws X {
+      final GetCheckedTypeValidator validator, final Future<V> future, final Class<X> exceptionClass) throws X {
     validator.validateClass(exceptionClass);
     try {
       return future.get();
-    } catch (InterruptedException e) {
+    } catch (final InterruptedException e) {
       currentThread().interrupt();
       throw newWithCause(exceptionClass, e);
-    } catch (ExecutionException e) {
+    } catch (final ExecutionException e) {
       wrapAndThrowExceptionOrError(e.getCause(), exceptionClass);
       throw new AssertionError();
     }
@@ -66,17 +66,17 @@ final class FuturesGetChecked {
   /** Implementation of {@link Futures#getChecked(Future, Class, long, TimeUnit)}. */
   @CanIgnoreReturnValue
   static <V, X extends Exception> V getChecked(
-      Future<V> future, Class<X> exceptionClass, long timeout, TimeUnit unit) throws X {
+      final Future<V> future, final Class<X> exceptionClass, final long timeout, final TimeUnit unit) throws X {
     // TODO(cpovirk): benchmark a version of this method that accepts a GetCheckedTypeValidator
     bestGetCheckedTypeValidator().validateClass(exceptionClass);
     try {
       return future.get(timeout, unit);
-    } catch (InterruptedException e) {
+    } catch (final InterruptedException e) {
       currentThread().interrupt();
       throw newWithCause(exceptionClass, e);
-    } catch (TimeoutException e) {
+    } catch (final TimeoutException e) {
       throw newWithCause(exceptionClass, e);
-    } catch (ExecutionException e) {
+    } catch (final ExecutionException e) {
       wrapAndThrowExceptionOrError(e.getCause(), exceptionClass);
       throw new AssertionError();
     }
@@ -115,7 +115,7 @@ final class FuturesGetChecked {
 
     static final GetCheckedTypeValidator BEST_VALIDATOR = getBestValidator();
 
-    @IgnoreJRERequirement // getChecked falls back to another implementation if necessary
+//    @IgnoreJRERequirement // getChecked falls back to another implementation if necessary
     @J2ObjCIncompatible // ClassValue
     enum ClassValueValidator implements GetCheckedTypeValidator {
       INSTANCE;
@@ -127,14 +127,14 @@ final class FuturesGetChecked {
       private static final ClassValue<Boolean> isValidClass =
           new ClassValue<Boolean>() {
             @Override
-            protected Boolean computeValue(Class<?> type) {
+            protected Boolean computeValue(final Class<?> type) {
               checkExceptionClassValidity(type.asSubclass(Exception.class));
               return true;
             }
           };
 
       @Override
-      public void validateClass(Class<? extends Exception> exceptionClass) {
+      public void validateClass(final Class<? extends Exception> exceptionClass) {
         isValidClass.get(exceptionClass); // throws if invalid; returns safely (and caches) if valid
       }
     }
@@ -154,8 +154,8 @@ final class FuturesGetChecked {
           new CopyOnWriteArraySet<>();
 
       @Override
-      public void validateClass(Class<? extends Exception> exceptionClass) {
-        for (WeakReference<Class<? extends Exception>> knownGood : validClasses) {
+      public void validateClass(final Class<? extends Exception> exceptionClass) {
+        for (final WeakReference<Class<? extends Exception>> knownGood : validClasses) {
           if (exceptionClass.equals(knownGood.get())) {
             return;
           }
@@ -186,9 +186,9 @@ final class FuturesGetChecked {
      */
     static GetCheckedTypeValidator getBestValidator() {
       try {
-        Class<?> theClass = Class.forName(CLASS_VALUE_VALIDATOR_NAME);
+        final Class<?> theClass = Class.forName(CLASS_VALUE_VALIDATOR_NAME);
         return (GetCheckedTypeValidator) theClass.getEnumConstants()[0];
-      } catch (Throwable t) { // ensure we really catch *everything*
+      } catch (final Throwable t) { // ensure we really catch *everything*
         return weakSetValidator();
       }
     }
@@ -196,7 +196,7 @@ final class FuturesGetChecked {
 
   // TODO(cpovirk): change parameter order to match other helper methods (Class, Throwable)?
   private static <X extends Exception> void wrapAndThrowExceptionOrError(
-      Throwable cause, Class<X> exceptionClass) throws X {
+      final Throwable cause, final Class<X> exceptionClass) throws X {
     if (cause instanceof Error) {
       throw new ExecutionError((Error) cause);
     }
@@ -212,21 +212,23 @@ final class FuturesGetChecked {
    */
 
   private static boolean hasConstructorUsableByGetChecked(
-      Class<? extends Exception> exceptionClass) {
+      final Class<? extends Exception> exceptionClass) {
     try {
-      Exception unused = newWithCause(exceptionClass, new Exception());
+      final Exception unused = newWithCause(exceptionClass, new Exception());
       return true;
-    } catch (Exception e) {
+    } catch (final Exception e) {
       return false;
     }
   }
 
-  private static <X extends Exception> X newWithCause(Class<X> exceptionClass, Throwable cause) {
+  private static <X extends Exception> X newWithCause(final Class<X> exceptionClass, final Throwable cause) {
     // getConstructors() guarantees this as long as we don't modify the array.
     @SuppressWarnings({"unchecked", "rawtypes"})
+    final
     List<Constructor<X>> constructors = (List) Arrays.asList(exceptionClass.getConstructors());
-    for (Constructor<X> constructor : preferringStrings(constructors)) {
-      @Nullable X instance = newFromConstructor(constructor, cause);
+    for (final Constructor<X> constructor : preferringStrings(constructors)) {
+      @Nullable
+      final X instance = newFromConstructor(constructor, cause);
       if (instance != null) {
         if (instance.getCause() == null) {
           instance.initCause(cause);
@@ -242,7 +244,7 @@ final class FuturesGetChecked {
   }
 
   private static <X extends Exception> List<Constructor<X>> preferringStrings(
-      List<Constructor<X>> constructors) {
+      final List<Constructor<X>> constructors) {
     return WITH_STRING_PARAM_FIRST.sortedCopy(constructors);
   }
 
@@ -251,17 +253,17 @@ final class FuturesGetChecked {
           .onResultOf(
               new Function<Constructor<?>, Boolean>() {
                 @Override
-                public Boolean apply(Constructor<?> input) {
+                public Boolean apply(final Constructor<?> input) {
                   return asList(input.getParameterTypes()).contains(String.class);
                 }
               })
           .reverse();
 
-  private static <X> @Nullable X newFromConstructor(Constructor<X> constructor, Throwable cause) {
-    Class<?>[] paramTypes = constructor.getParameterTypes();
-    Object[] params = new Object[paramTypes.length];
+  private static <X> @Nullable X newFromConstructor(final Constructor<X> constructor, final Throwable cause) {
+    final Class<?>[] paramTypes = constructor.getParameterTypes();
+    final Object[] params = new Object[paramTypes.length];
     for (int i = 0; i < paramTypes.length; i++) {
-      Class<?> paramType = paramTypes[i];
+      final Class<?> paramType = paramTypes[i];
       if (paramType.equals(String.class)) {
         params[i] = cause.toString();
       } else if (paramType.equals(Throwable.class)) {
@@ -281,12 +283,12 @@ final class FuturesGetChecked {
   }
 
   @VisibleForTesting
-  static boolean isCheckedException(Class<? extends Exception> type) {
+  static boolean isCheckedException(final Class<? extends Exception> type) {
     return !RuntimeException.class.isAssignableFrom(type);
   }
 
   @VisibleForTesting
-  static void checkExceptionClassValidity(Class<? extends Exception> exceptionClass) {
+  static void checkExceptionClassValidity(final Class<? extends Exception> exceptionClass) {
     checkArgument(
         isCheckedException(exceptionClass),
         "Futures.getChecked exception type (%s) must not be a RuntimeException",
