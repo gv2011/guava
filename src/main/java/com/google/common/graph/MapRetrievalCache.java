@@ -17,7 +17,8 @@
 package com.google.common.graph;
 
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
+import com.google.common.annotations.Nullable;
 
 /**
  * A {@link MapIteratorCache} that adds additional caching. In addition to the caching provided by

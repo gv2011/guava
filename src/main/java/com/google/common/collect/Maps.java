@@ -25,6 +25,8 @@ import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.MonotonicNonNull;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Converter;
 import com.google.common.base.Equivalence;
 import com.google.common.base.Function;
@@ -68,8 +70,6 @@ import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Static utility methods pertaining to {@link Map} instances (including instances of {@link

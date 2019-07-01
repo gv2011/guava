@@ -20,9 +20,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.RegularImmutableMap.makeImmutable;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
+
 import java.util.Map;
 import java.util.function.BiConsumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of ImmutableMap backed by a JDK HashMap, which has smartness protecting against

@@ -17,12 +17,12 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.MonotonicNonNull;
 import com.google.j2objc.annotations.WeakOuter;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * A skeleton implementation of a descending multiset. Only needs {@code forwardMultiset()} and

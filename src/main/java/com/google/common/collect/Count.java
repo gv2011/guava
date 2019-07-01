@@ -15,8 +15,9 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
+
 import java.io.Serializable;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A mutable value of type {@code int}, for multisets to use in tracking counts of values.

@@ -19,12 +19,12 @@ package com.google.common.collect;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Supplier;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of {@link Table} using linked hash tables. This guarantees predictable iteration

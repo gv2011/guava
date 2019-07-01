@@ -18,12 +18,12 @@ package com.google.common.graph;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.annotations.Nullable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
 import java.util.AbstractSet;
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A class to represent the set of edges connecting an (implicit) origin node to a target node.

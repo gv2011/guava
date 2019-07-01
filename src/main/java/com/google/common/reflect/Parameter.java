@@ -17,12 +17,12 @@ package com.google.common.reflect;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.AnnotatedType;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Represents a method or constructor parameter.

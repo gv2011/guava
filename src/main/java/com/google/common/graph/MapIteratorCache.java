@@ -18,6 +18,7 @@ package com.google.common.graph;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.annotations.Nullable;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.AbstractSet;
@@ -25,7 +26,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A map-like data structure that wraps a backing map and caches values while iterating through

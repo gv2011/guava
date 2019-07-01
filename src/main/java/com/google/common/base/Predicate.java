@@ -15,8 +15,8 @@
 package com.google.common.base;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Legacy version of {@link java.util.function.Predicate java.util.function.Predicate}. Determines a

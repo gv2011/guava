@@ -20,6 +20,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
+
 import java.util.Comparator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
@@ -28,7 +30,6 @@ import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Spliterator utilities for {@code common.collect} internals. */
 @GwtCompatible

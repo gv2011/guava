@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import java.io.Serializable;
@@ -31,7 +32,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of {@code Table} whose row keys and column keys are ordered by their natural

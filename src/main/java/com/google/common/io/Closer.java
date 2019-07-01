@@ -18,6 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.MonotonicNonNull;
+import com.google.common.annotations.Nullable;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Throwables;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -26,8 +28,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link Closeable} that collects {@code Closeable} resources and closes them all when it is

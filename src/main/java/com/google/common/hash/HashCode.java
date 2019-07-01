@@ -19,12 +19,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.UnsignedInts;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.Serializable;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An immutable hash code of arbitrary bit length.

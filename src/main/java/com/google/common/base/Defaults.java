@@ -17,7 +17,7 @@ package com.google.common.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtIncompatible;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import com.google.common.annotations.Nullable;
 
 /**
  * This class provides default values for all Java types, as defined by the JLS.

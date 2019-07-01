@@ -17,6 +17,7 @@ package com.google.common.reflect;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Function;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ForwardingMapEntry;
@@ -27,7 +28,6 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A mutable type-to-instance map. See also {@link ImmutableTypeToInstanceMap}.

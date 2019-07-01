@@ -17,10 +17,10 @@ package com.google.common.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.errorprone.annotations.ForOverride;
 import java.io.Serializable;
 import java.util.function.BiPredicate;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A strategy for determining whether two instances are considered equivalent, and for computing

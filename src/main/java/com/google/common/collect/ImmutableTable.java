@@ -19,6 +19,8 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.MonotonicNonNull;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Tables.AbstractCell;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -32,8 +34,6 @@ import java.util.Spliterator;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collector;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link Table} whose contents will never change, with many other important properties detailed

@@ -17,8 +17,9 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
+
 import java.util.NoSuchElementException;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides a skeletal implementation of the {@code Iterator} interface for sequences

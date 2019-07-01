@@ -23,6 +23,7 @@ import static com.google.common.graph.GraphConstants.INNER_LOAD_FACTOR;
 import static com.google.common.graph.Graphs.checkNonNegative;
 import static com.google.common.graph.Graphs.checkPositive;
 
+import com.google.common.annotations.Nullable;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.UnmodifiableIterator;
@@ -33,7 +34,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An implementation of {@link GraphConnections} for directed graphs.

@@ -18,6 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.Nullable;
+
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -25,7 +27,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility methods for working with {@link Enum} instances.

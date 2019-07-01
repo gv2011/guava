@@ -23,6 +23,7 @@ import static com.google.common.graph.GraphConstants.MULTIPLE_EDGES_CONNECTING;
 import static java.util.Collections.unmodifiableSet;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
@@ -35,7 +36,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides a skeletal implementation of {@link Network}. It is recommended to extend

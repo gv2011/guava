@@ -16,6 +16,7 @@ package com.google.common.io;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.annotations.VisibleForTesting;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -24,7 +25,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.slf4j.Logger;
 
 /**

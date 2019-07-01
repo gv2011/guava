@@ -17,10 +17,10 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.primitives.Booleans;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation detail for the internal structure of {@link Range} instances. Represents a unique

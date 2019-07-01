@@ -19,9 +19,9 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.NoSuchElementException;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides a skeletal implementation of the {@code Iterator} interface, to make this

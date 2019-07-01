@@ -23,8 +23,10 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.slf4j.Logger;
+
+import com.google.common.annotations.Nullable;
 
 /**
  * Thread that finalizes referents. All references should implement {@code

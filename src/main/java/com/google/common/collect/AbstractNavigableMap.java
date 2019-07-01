@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.collect.Maps.IteratorBasedAbstractMap;
 import java.util.Iterator;
 import java.util.NavigableMap;
@@ -24,7 +25,6 @@ import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Skeletal implementation of {@link NavigableMap}.

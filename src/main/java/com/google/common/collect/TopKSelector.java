@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.math.IntMath;
 import java.math.RoundingMode;
 import java.util.Arrays;
@@ -28,7 +29,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An accumulator that selects the "top" {@code k} elements added to it, relative to a provided

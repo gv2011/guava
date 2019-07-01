@@ -19,9 +19,10 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
+
 import java.io.Serializable;
 import java.util.Comparator;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** An ordering for a pre-existing comparator. */
 @GwtCompatible(serializable = true)

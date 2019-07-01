@@ -16,12 +16,12 @@ package com.google.common.io;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * File name filter that only accepts files matching a regular expression. This class is thread-safe

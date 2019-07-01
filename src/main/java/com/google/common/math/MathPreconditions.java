@@ -15,10 +15,10 @@
 package com.google.common.math;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A collection of preconditions for math functions.

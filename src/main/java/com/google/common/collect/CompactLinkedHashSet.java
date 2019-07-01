@@ -17,12 +17,13 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.MonotonicNonNull;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * CompactLinkedHashSet is an implementation of a Set, which a predictable iteration order that

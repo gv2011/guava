@@ -17,10 +17,11 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
+
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Iterator;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** An ordering which sorts iterables by comparing corresponding elements pairwise. */
 @GwtCompatible(serializable = true)

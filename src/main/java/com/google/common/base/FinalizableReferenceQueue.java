@@ -15,6 +15,7 @@
 package com.google.common.base;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.annotations.VisibleForTesting;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -28,7 +29,7 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.slf4j.Logger;
 
 /**

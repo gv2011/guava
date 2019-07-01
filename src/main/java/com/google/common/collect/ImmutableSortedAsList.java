@@ -16,9 +16,10 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.Nullable;
+
 import java.util.Comparator;
 import java.util.Spliterator;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * List returned by {@code ImmutableSortedSet.asList()} when the set isn't empty.

@@ -17,8 +17,8 @@ package com.google.common.base;
 import static com.google.common.base.Strings.lenientFormat;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Static convenience methods that serve the same purpose as Java language <a

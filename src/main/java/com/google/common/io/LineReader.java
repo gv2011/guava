@@ -19,13 +19,13 @@ import static com.google.common.io.CharStreams.createBuffer;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.Nullable;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.CharBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A class for reading lines of text. Provides the same functionality as {@link

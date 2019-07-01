@@ -17,9 +17,10 @@ package com.google.common.reflect;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
+
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Captures a free type variable that can be used in {@link TypeToken#where}. For example:

@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
@@ -33,7 +34,6 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.LongConsumer;
 import java.util.stream.LongStream;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An immutable array of {@code long} values, with an API resembling {@link List}.

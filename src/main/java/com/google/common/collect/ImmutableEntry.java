@@ -17,8 +17,9 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
+
 import java.io.Serializable;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** @see com.google.common.collect.Maps#immutableEntry(Object, Object) */
 @GwtCompatible(serializable = true)

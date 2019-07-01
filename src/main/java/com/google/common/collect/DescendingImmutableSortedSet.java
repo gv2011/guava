@@ -17,7 +17,7 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtIncompatible;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import com.google.common.annotations.Nullable;
 
 /**
  * Skeletal implementation of {@link ImmutableSortedSet#descendingSet()}.

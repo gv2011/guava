@@ -23,7 +23,8 @@ import static com.google.common.graph.Graphs.checkNonNegative;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
+import com.google.common.annotations.Nullable;
 
 /**
  * Configurable implementation of {@link ValueGraph} that supports the options supplied by {@link

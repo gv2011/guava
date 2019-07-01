@@ -15,11 +15,11 @@
 package com.google.common.hash;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Preconditions;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Funnels for common types. All implementations are serializable.

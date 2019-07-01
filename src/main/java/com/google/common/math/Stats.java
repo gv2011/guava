@@ -26,13 +26,13 @@ import static java.lang.Double.isNaN;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Iterator;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A bundle of statistical summary values -- sum, count, mean/average, min and max, and several

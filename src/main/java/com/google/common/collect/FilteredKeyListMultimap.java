@@ -17,9 +17,9 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Predicate;
 import java.util.List;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of {@link Multimaps#filterKeys(ListMultimap, Predicate)}.

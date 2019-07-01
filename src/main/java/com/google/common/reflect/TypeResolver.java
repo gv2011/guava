@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.util.Arrays.asList;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
@@ -35,7 +36,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An object of this class encapsulates type mappings from type variables. Mappings are established

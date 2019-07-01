@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Ascii;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
@@ -30,7 +31,6 @@ import com.google.errorprone.annotations.Immutable;
 import com.google.thirdparty.publicsuffix.PublicSuffixPatterns;
 import com.google.thirdparty.publicsuffix.PublicSuffixType;
 import java.util.List;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An immutable well-formed internet domain name, such as {@code com} or {@code foo.co.uk}. Only

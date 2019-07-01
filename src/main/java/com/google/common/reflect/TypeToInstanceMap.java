@@ -15,9 +15,9 @@
 package com.google.common.reflect;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A map, each entry of which maps a {@link TypeToken} to an instance of that type. In addition to

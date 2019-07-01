@@ -1,5 +1,4 @@
 module com.github.gv2011.guava {
-  requires org.checkerframework.checker.qual;
   requires org.slf4j;
   requires java.compiler;
   requires java.base;

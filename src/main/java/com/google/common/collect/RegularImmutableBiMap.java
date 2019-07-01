@@ -23,6 +23,7 @@ import static com.google.common.collect.ImmutableMapEntry.createEntryArray;
 import static com.google.common.collect.RegularImmutableMap.checkNoConflictInKeyBucket;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMapEntry.NonTerminalImmutableBiMapEntry;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -31,7 +32,6 @@ import com.google.j2objc.annotations.RetainedWith;
 import java.io.Serializable;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Bimap with zero or more mappings.

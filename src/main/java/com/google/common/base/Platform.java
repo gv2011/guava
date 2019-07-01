@@ -18,9 +18,8 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 
 /**
  * Methods factored out so that they can be emulated differently in GWT.

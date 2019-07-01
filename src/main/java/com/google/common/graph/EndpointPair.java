@@ -20,11 +20,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.graph.GraphConstants.NOT_AVAILABLE_ON_UNDIRECTED;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.Nullable;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.errorprone.annotations.Immutable;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An immutable pair representing the two endpoints of an edge in a graph. The {@link EndpointPair}

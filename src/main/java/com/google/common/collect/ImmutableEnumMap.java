@@ -19,12 +19,12 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.collect.ImmutableMap.IteratorBasedImmutableMap;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Spliterator;
 import java.util.function.BiConsumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of {@link ImmutableMap} backed by a non-empty {@link java.util.EnumMap}.

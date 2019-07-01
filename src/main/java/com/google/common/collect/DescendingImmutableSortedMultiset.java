@@ -15,7 +15,7 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtIncompatible;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import com.google.common.annotations.Nullable;
 
 /**
  * A descending wrapper around an {@code ImmutableSortedMultiset}

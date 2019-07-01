@@ -17,12 +17,12 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkElementIndex;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.Nullable;
 import com.google.common.math.IntMath;
 import java.util.AbstractList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.RandomAccess;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of {@link Lists#cartesianProduct(List)}.
