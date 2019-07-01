@@ -16,6 +16,9 @@ package com.google.common.base;
 
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,9 +28,8 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
 
 /**
  * A reference queue with an associated background thread that dequeues references and invokes
@@ -130,7 +132,7 @@ public class FinalizableReferenceQueue implements Closeable {
    * https://github.com/google/guava/issues/3086 for more information.
    */
 
-  private static final Logger logger = Logger.getLogger(FinalizableReferenceQueue.class.getName());
+  private static final Logger logger = getLogger(FinalizableReferenceQueue.class.getName());
 
   private static final String FINALIZER_CLASS_NAME = "com.google.common.base.internal.Finalizer";
 
@@ -138,7 +140,7 @@ public class FinalizableReferenceQueue implements Closeable {
   private static final Method startFinalizer;
 
   static {
-    Class<?> finalizer =
+    final Class<?> finalizer =
         loadFinalizer(new SystemLoader(), new DecoupledLoader(), new DirectLoader());
     startFinalizer = getStartFinalizer(finalizer);
   }
@@ -160,11 +162,10 @@ public class FinalizableReferenceQueue implements Closeable {
     try {
       startFinalizer.invoke(null, FinalizableReference.class, queue, frqRef);
       threadStarted = true;
-    } catch (IllegalAccessException impossible) {
+    } catch (final IllegalAccessException impossible) {
       throw new AssertionError(impossible); // startFinalizer() is public
-    } catch (Throwable t) {
-      logger.log(
-          Level.INFO,
+    } catch (final Throwable t) {
+      logger.info(
           "Failed to start reference finalizer thread."
               + " Reference cleanup will only occur when new references are created.",
           t);
@@ -198,8 +199,8 @@ public class FinalizableReferenceQueue implements Closeable {
       reference.clear();
       try {
         ((FinalizableReference) reference).finalizeReferent();
-      } catch (Throwable t) {
-        logger.log(Level.SEVERE, "Error cleaning up after reference.", t);
+      } catch (final Throwable t) {
+        logger.error("Error cleaning up after reference.", t);
       }
     }
   }
@@ -209,9 +210,9 @@ public class FinalizableReferenceQueue implements Closeable {
    *
    * @return Finalizer.class
    */
-  private static Class<?> loadFinalizer(FinalizerLoader... loaders) {
-    for (FinalizerLoader loader : loaders) {
-      Class<?> finalizer = loader.loadFinalizer();
+  private static Class<?> loadFinalizer(final FinalizerLoader... loaders) {
+    for (final FinalizerLoader loader : loaders) {
+      final Class<?> finalizer = loader.loadFinalizer();
       if (finalizer != null) {
         return finalizer;
       }
@@ -249,14 +250,14 @@ public class FinalizableReferenceQueue implements Closeable {
       ClassLoader systemLoader;
       try {
         systemLoader = ClassLoader.getSystemClassLoader();
-      } catch (SecurityException e) {
+      } catch (final SecurityException e) {
         logger.info("Not allowed to access system class loader.");
         return null;
       }
       if (systemLoader != null) {
         try {
           return systemLoader.loadClass(FINALIZER_CLASS_NAME);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
           // Ignore. Finalizer is simply in a child class loader.
           return null;
         }
@@ -290,10 +291,10 @@ public class FinalizableReferenceQueue implements Closeable {
          *
          * System class loader will (and must) be the parent.
          */
-        ClassLoader finalizerLoader = newLoader(getBaseUrl());
+        final ClassLoader finalizerLoader = newLoader(getBaseUrl());
         return finalizerLoader.loadClass(FINALIZER_CLASS_NAME);
-      } catch (Exception e) {
-        logger.log(Level.WARNING, LOADING_ERROR, e);
+      } catch (final Exception e) {
+        logger.warn(LOADING_ERROR, e);
         return null;
       }
     }
@@ -301,8 +302,8 @@ public class FinalizableReferenceQueue implements Closeable {
     /** Gets URL for base of path containing Finalizer.class. */
     URL getBaseUrl() throws IOException {
       // Find URL pointing to Finalizer.class file.
-      String finalizerPath = FINALIZER_CLASS_NAME.replace('.', '/') + ".class";
-      URL finalizerUrl = getClass().getClassLoader().getResource(finalizerPath);
+      final String finalizerPath = FINALIZER_CLASS_NAME.replace('.', '/') + ".class";
+      final URL finalizerUrl = getClass().getClassLoader().getResource(finalizerPath);
       if (finalizerUrl == null) {
         throw new FileNotFoundException(finalizerPath);
       }
@@ -317,7 +318,7 @@ public class FinalizableReferenceQueue implements Closeable {
     }
 
     /** Creates a class loader with the given base URL as its classpath. */
-    URLClassLoader newLoader(URL base) {
+    URLClassLoader newLoader(final URL base) {
       // We use the bootstrap class loader as the parent because Finalizer by design uses
       // only standard Java classes. That also means that FinalizableReferenceQueueTest
       // doesn't pick up the wrong version of the Finalizer class.
@@ -334,18 +335,18 @@ public class FinalizableReferenceQueue implements Closeable {
     public Class<?> loadFinalizer() {
       try {
         return Class.forName(FINALIZER_CLASS_NAME);
-      } catch (ClassNotFoundException e) {
+      } catch (final ClassNotFoundException e) {
         throw new AssertionError(e);
       }
     }
   }
 
   /** Looks up Finalizer.startFinalizer(). */
-  static Method getStartFinalizer(Class<?> finalizer) {
+  static Method getStartFinalizer(final Class<?> finalizer) {
     try {
       return finalizer.getMethod(
           "startFinalizer", Class.class, ReferenceQueue.class, PhantomReference.class);
-    } catch (NoSuchMethodException e) {
+    } catch (final NoSuchMethodException e) {
       throw new AssertionError(e);
     }
   }

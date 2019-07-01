@@ -17,13 +17,15 @@ package com.google.common.io;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
 
 /**
  * Utility methods for working with {@link Closeable} objects.
@@ -34,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @Beta
 @GwtIncompatible
 public final class Closeables {
-  @VisibleForTesting static final Logger logger = Logger.getLogger(Closeables.class.getName());
+  @VisibleForTesting static final Logger logger = getLogger(Closeables.class.getName());
 
   private Closeables() {}
 
@@ -69,16 +71,16 @@ public final class Closeables {
    * @throws IOException if {@code swallowIOException} is false and {@code close} throws an {@code
    *     IOException}.
    */
-  public static void close(@Nullable Closeable closeable, boolean swallowIOException)
+  public static void close(@Nullable final Closeable closeable, final boolean swallowIOException)
       throws IOException {
     if (closeable == null) {
       return;
     }
     try {
       closeable.close();
-    } catch (IOException e) {
+    } catch (final IOException e) {
       if (swallowIOException) {
-        logger.log(Level.WARNING, "IOException thrown while closing Closeable.", e);
+        logger.warn("IOException thrown while closing Closeable.", e);
       } else {
         throw e;
       }
@@ -99,10 +101,10 @@ public final class Closeables {
    *     does nothing
    * @since 17.0
    */
-  public static void closeQuietly(@Nullable InputStream inputStream) {
+  public static void closeQuietly(@Nullable final InputStream inputStream) {
     try {
       close(inputStream, true);
-    } catch (IOException impossible) {
+    } catch (final IOException impossible) {
       throw new AssertionError(impossible);
     }
   }
@@ -120,10 +122,10 @@ public final class Closeables {
    * @param reader the reader to be closed, or {@code null} in which case this method does nothing
    * @since 17.0
    */
-  public static void closeQuietly(@Nullable Reader reader) {
+  public static void closeQuietly(@Nullable final Reader reader) {
     try {
       close(reader, true);
-    } catch (IOException impossible) {
+    } catch (final IOException impossible) {
       throw new AssertionError(impossible);
     }
   }

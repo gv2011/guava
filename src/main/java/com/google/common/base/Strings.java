@@ -16,11 +16,12 @@ package com.google.common.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.logging.Level.WARNING;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.VisibleForTesting;
-import java.util.logging.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -39,7 +40,7 @@ public final class Strings {
    * @param string the string to test and possibly return
    * @return {@code string} itself if it is non-null; {@code ""} if it is null
    */
-  public static String nullToEmpty(@Nullable String string) {
+  public static String nullToEmpty(@Nullable final String string) {
     return Platform.nullToEmpty(string);
   }
 
@@ -49,7 +50,7 @@ public final class Strings {
    * @param string the string to test and possibly return
    * @return {@code string} itself if it is nonempty; {@code null} if it is empty or null
    */
-  public static @Nullable String emptyToNull(@Nullable String string) {
+  public static @Nullable String emptyToNull(@Nullable final String string) {
     return Platform.emptyToNull(string);
   }
 
@@ -64,7 +65,7 @@ public final class Strings {
    * @param string a string reference to check
    * @return {@code true} if the string is null or is the empty string
    */
-  public static boolean isNullOrEmpty(@Nullable String string) {
+  public static boolean isNullOrEmpty(@Nullable final String string) {
     return Platform.stringIsNullOrEmpty(string);
   }
 
@@ -86,12 +87,12 @@ public final class Strings {
    *     is reached
    * @return the padded string
    */
-  public static String padStart(String string, int minLength, char padChar) {
+  public static String padStart(final String string, final int minLength, final char padChar) {
     checkNotNull(string); // eager for GWT.
     if (string.length() >= minLength) {
       return string;
     }
-    StringBuilder sb = new StringBuilder(minLength);
+    final StringBuilder sb = new StringBuilder(minLength);
     for (int i = string.length(); i < minLength; i++) {
       sb.append(padChar);
     }
@@ -117,12 +118,12 @@ public final class Strings {
    *     reached
    * @return the padded string
    */
-  public static String padEnd(String string, int minLength, char padChar) {
+  public static String padEnd(final String string, final int minLength, final char padChar) {
     checkNotNull(string); // eager for GWT.
     if (string.length() >= minLength) {
       return string;
     }
-    StringBuilder sb = new StringBuilder(minLength);
+    final StringBuilder sb = new StringBuilder(minLength);
     sb.append(string);
     for (int i = string.length(); i < minLength; i++) {
       sb.append(padChar);
@@ -140,7 +141,7 @@ public final class Strings {
    *     {@code count} is zero)
    * @throws IllegalArgumentException if {@code count} is negative
    */
-  public static String repeat(String string, int count) {
+  public static String repeat(final String string, final int count) {
     checkNotNull(string); // eager for GWT.
 
     if (count <= 1) {
@@ -173,11 +174,11 @@ public final class Strings {
    *
    * @since 11.0
    */
-  public static String commonPrefix(CharSequence a, CharSequence b) {
+  public static String commonPrefix(final CharSequence a, final CharSequence b) {
     checkNotNull(a);
     checkNotNull(b);
 
-    int maxPrefixLength = Math.min(a.length(), b.length());
+    final int maxPrefixLength = Math.min(a.length(), b.length());
     int p = 0;
     while (p < maxPrefixLength && a.charAt(p) == b.charAt(p)) {
       p++;
@@ -195,11 +196,11 @@ public final class Strings {
    *
    * @since 11.0
    */
-  public static String commonSuffix(CharSequence a, CharSequence b) {
+  public static String commonSuffix(final CharSequence a, final CharSequence b) {
     checkNotNull(a);
     checkNotNull(b);
 
-    int maxSuffixLength = Math.min(a.length(), b.length());
+    final int maxSuffixLength = Math.min(a.length(), b.length());
     int s = 0;
     while (s < maxSuffixLength && a.charAt(a.length() - s - 1) == b.charAt(b.length() - s - 1)) {
       s++;
@@ -216,7 +217,7 @@ public final class Strings {
    * Out-of-range indexes return false.
    */
   @VisibleForTesting
-  static boolean validSurrogatePairAt(CharSequence string, int index) {
+  static boolean validSurrogatePairAt(final CharSequence string, final int index) {
     return index >= 0
         && index <= (string.length() - 2)
         && Character.isHighSurrogate(string.charAt(index))
@@ -269,11 +270,11 @@ public final class Strings {
     }
 
     // start substituting the arguments into the '%s' placeholders
-    StringBuilder builder = new StringBuilder(template.length() + 16 * args.length);
+    final StringBuilder builder = new StringBuilder(template.length() + 16 * args.length);
     int templateStart = 0;
     int i = 0;
     while (i < args.length) {
-      int placeholderStart = template.indexOf("%s", templateStart);
+      final int placeholderStart = template.indexOf("%s", templateStart);
       if (placeholderStart == -1) {
         break;
       }
@@ -297,16 +298,15 @@ public final class Strings {
     return builder.toString();
   }
 
-  private static String lenientToString(@Nullable Object o) {
+  private static String lenientToString(@Nullable final Object o) {
     try {
       return String.valueOf(o);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       // Default toString() behavior - see Object.toString()
-      String objectToString =
+      final String objectToString =
           o.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(o));
       // Logger is created inline with fixed name to avoid forcing Proguard to create another class.
-      Logger.getLogger("com.google.common.base.Strings")
-          .log(WARNING, "Exception during lenientFormat for " + objectToString, e);
+      getLogger(Strings.class).warn("Exception during lenientFormat for " + objectToString, e);
       return "<" + objectToString + " threw " + e.getClass().getName() + ">";
     }
   }

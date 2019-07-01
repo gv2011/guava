@@ -14,6 +14,8 @@
 
 package com.google.common.base.internal;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -21,9 +23,8 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
 
 /**
  * Thread that finalizes referents. All references should implement {@code
@@ -45,7 +46,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class Finalizer implements Runnable {
 
-  private static final Logger logger = Logger.getLogger(Finalizer.class.getName());
+  private static final Logger logger = getLogger(Finalizer.class);
 
   /** Name of FinalizableReference.class. */
   private static final String FINALIZABLE_REFERENCE = "com.google.common.base.FinalizableReference";
@@ -60,9 +61,9 @@ public class Finalizer implements Runnable {
    *     close() method is called.
    */
   public static void startFinalizer(
-      Class<?> finalizableReferenceClass,
-      ReferenceQueue<Object> queue,
-      PhantomReference<Object> frqReference) {
+      final Class<?> finalizableReferenceClass,
+      final ReferenceQueue<Object> queue,
+      final PhantomReference<Object> frqReference) {
     /*
      * We use FinalizableReference.class for two things:
      *
@@ -75,19 +76,19 @@ public class Finalizer implements Runnable {
       throw new IllegalArgumentException("Expected " + FINALIZABLE_REFERENCE + ".");
     }
 
-    Finalizer finalizer = new Finalizer(finalizableReferenceClass, queue, frqReference);
-    String threadName = Finalizer.class.getName();
+    final Finalizer finalizer = new Finalizer(finalizableReferenceClass, queue, frqReference);
+    final String threadName = Finalizer.class.getName();
     Thread thread = null;
     if (bigThreadConstructor != null) {
       try {
-        boolean inheritThreadLocals = false;
-        long defaultStackSize = 0;
+        final boolean inheritThreadLocals = false;
+        final long defaultStackSize = 0;
         thread =
             bigThreadConstructor.newInstance(
                 (ThreadGroup) null, finalizer, threadName, defaultStackSize, inheritThreadLocals);
-      } catch (Throwable t) {
-        logger.log(
-            Level.INFO, "Failed to create a thread without inherited thread-local values", t);
+      } catch (final Throwable t) {
+        logger.info(
+            "Failed to create a thread without inherited thread-local values", t);
       }
     }
     if (thread == null) {
@@ -99,9 +100,8 @@ public class Finalizer implements Runnable {
       if (inheritableThreadLocals != null) {
         inheritableThreadLocals.set(thread, null);
       }
-    } catch (Throwable t) {
-      logger.log(
-          Level.INFO,
+    } catch (final Throwable t) {
+      logger.info(
           "Failed to clear thread local values inherited by reference finalizer thread.",
           t);
     }
@@ -124,12 +124,12 @@ public class Finalizer implements Runnable {
 
   /** Constructs a new finalizer thread. */
   private Finalizer(
-      Class<?> finalizableReferenceClass,
-      ReferenceQueue<Object> queue,
-      PhantomReference<Object> frqReference) {
+      final Class<?> finalizableReferenceClass,
+      final ReferenceQueue<Object> queue,
+      final PhantomReference<Object> frqReference) {
     this.queue = queue;
 
-    this.finalizableReferenceClassReference =
+    finalizableReferenceClassReference =
         new WeakReference<Class<?>>(finalizableReferenceClass);
 
     // Keep track of the FRQ that started us so we know when to stop.
@@ -145,7 +145,7 @@ public class Finalizer implements Runnable {
         if (!cleanUp(queue.remove())) {
           break;
         }
-      } catch (InterruptedException e) {
+      } catch (final InterruptedException e) {
         // ignore
       }
     }
@@ -158,7 +158,7 @@ public class Finalizer implements Runnable {
    *     is no longer referenced.
    */
   private boolean cleanUp(Reference<?> reference) {
-    Method finalizeReferentMethod = getFinalizeReferentMethod();
+    final Method finalizeReferentMethod = getFinalizeReferentMethod();
     if (finalizeReferentMethod == null) {
       return false;
     }
@@ -178,8 +178,8 @@ public class Finalizer implements Runnable {
 
       try {
         finalizeReferentMethod.invoke(reference);
-      } catch (Throwable t) {
-        logger.log(Level.SEVERE, "Error cleaning up after reference.", t);
+      } catch (final Throwable t) {
+        logger.error("Error cleaning up after reference.", t);
       }
 
       /*
@@ -192,7 +192,7 @@ public class Finalizer implements Runnable {
 
   /** Looks up FinalizableReference.finalizeReferent() method. */
   private @Nullable Method getFinalizeReferentMethod() {
-    Class<?> finalizableReferenceClass = finalizableReferenceClassReference.get();
+    final Class<?> finalizableReferenceClass = finalizableReferenceClassReference.get();
     if (finalizableReferenceClass == null) {
       /*
        * FinalizableReference's class loader was reclaimed. While there's a chance that other
@@ -204,19 +204,18 @@ public class Finalizer implements Runnable {
     }
     try {
       return finalizableReferenceClass.getMethod("finalizeReferent");
-    } catch (NoSuchMethodException e) {
+    } catch (final NoSuchMethodException e) {
       throw new AssertionError(e);
     }
   }
 
   private static @Nullable Field getInheritableThreadLocalsField() {
     try {
-      Field inheritableThreadLocals = Thread.class.getDeclaredField("inheritableThreadLocals");
+      final Field inheritableThreadLocals = Thread.class.getDeclaredField("inheritableThreadLocals");
       inheritableThreadLocals.setAccessible(true);
       return inheritableThreadLocals;
-    } catch (Throwable t) {
-      logger.log(
-          Level.INFO,
+    } catch (final Throwable t) {
+      logger.info(
           "Couldn't access Thread.inheritableThreadLocals. Reference finalizer threads will "
               + "inherit thread local values.");
       return null;
@@ -227,7 +226,7 @@ public class Finalizer implements Runnable {
     try {
       return Thread.class.getConstructor(
           ThreadGroup.class, Runnable.class, String.class, long.class, boolean.class);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       // Probably pre Java 9. We'll fall back to Thread.inheritableThreadLocals.
       return null;
     }
