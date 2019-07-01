@@ -4,7 +4,7 @@ module com.github.gv2011.guava {
   requires java.logging;
   requires jsr305;
   requires j2objc.annotations;
-  requires jdk.unsupported;
+//  requires jdk.unsupported;
 //  requires failureaccess;
 
   exports com.google.common.collect;
