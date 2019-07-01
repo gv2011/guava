@@ -1,20 +1,5 @@
-# Maven
-target/
-*.ser
-*.ec
-
-# IntelliJ Idea
-.idea/
-out/
-*.ipr
-*.iws
-*.iml
-
-# Eclipse
-.classpath
-.project
-.settings/
-.metadata/
-
-# OS X
-.DS_Store
+/.settings
+/.project
+/.classpath
+/target/
+/log/
