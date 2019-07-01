@@ -24,4 +24,4 @@
 @ParametersAreNonnullByDefault
 package com.google.common.net;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import com.google.common.annotations.ParametersAreNonnullByDefault;

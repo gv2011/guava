@@ -28,5 +28,5 @@
 @ParametersAreNonnullByDefault
 package com.google.common.escape;
 
+import com.google.common.annotations.ParametersAreNonnullByDefault;
 import com.google.errorprone.annotations.CheckReturnValue;
-import javax.annotation.ParametersAreNonnullByDefault;
