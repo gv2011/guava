@@ -30,7 +30,7 @@ import java.util.Set;
 @GwtCompatible(emulated = true)
 final class Platform {
   /** Returns the platform preferred implementation of a map based on a hash table. */
-  static <K, V> Map<K, V> newHashMapWithExpectedSize(int expectedSize) {
+  static <K, V> Map<K, V> newHashMapWithExpectedSize(final int expectedSize) {
     return Maps.newHashMapWithExpectedSize(expectedSize);
   }
 
@@ -38,12 +38,12 @@ final class Platform {
    * Returns the platform preferred implementation of an insertion ordered map based on a hash
    * table.
    */
-  static <K, V> Map<K, V> newLinkedHashMapWithExpectedSize(int expectedSize) {
+  static <K, V> Map<K, V> newLinkedHashMapWithExpectedSize(final int expectedSize) {
     return Maps.newLinkedHashMapWithExpectedSize(expectedSize);
   }
 
   /** Returns the platform preferred implementation of a set based on a hash table. */
-  static <E> Set<E> newHashSetWithExpectedSize(int expectedSize) {
+  static <E> Set<E> newHashSetWithExpectedSize(final int expectedSize) {
     return Sets.newHashSetWithExpectedSize(expectedSize);
   }
 
@@ -51,7 +51,7 @@ final class Platform {
    * Returns the platform preferred implementation of an insertion ordered set based on a hash
    * table.
    */
-  static <E> Set<E> newLinkedHashSetWithExpectedSize(int expectedSize) {
+  static <E> Set<E> newLinkedHashSetWithExpectedSize(final int expectedSize) {
     return Sets.newLinkedHashSetWithExpectedSize(expectedSize);
   }
 
@@ -77,18 +77,20 @@ final class Platform {
    * @param reference any array of the desired type
    * @param length the length of the new array
    */
-  static <T> T[] newArray(T[] reference, int length) {
-    Class<?> type = reference.getClass().getComponentType();
+  static <T> T[] newArray(final T[] reference, final int length) {
+    final Class<?> type = reference.getClass().getComponentType();
 
     // the cast is safe because
     // result.getClass() == reference.getClass().getComponentType()
     @SuppressWarnings("unchecked")
+    final
     T[] result = (T[]) Array.newInstance(type, length);
     return result;
   }
 
   /** Equivalent to Arrays.copyOfRange(source, from, to, arrayOfType.getClass()). */
-  static <T> T[] copy(Object[] source, int from, int to, T[] arrayOfType) {
+  @SuppressWarnings("unchecked")
+  static <T> T[] copy(final Object[] source, final int from, final int to, final T[] arrayOfType) {
     return Arrays.copyOfRange(source, from, to, (Class<? extends T[]>) arrayOfType.getClass());
   }
 
@@ -97,15 +99,15 @@ final class Platform {
    * GWT). This is sometimes acceptable, when only server-side code could generate enough volume
    * that reclamation becomes important.
    */
-  static MapMaker tryWeakKeys(MapMaker mapMaker) {
+  static MapMaker tryWeakKeys(final MapMaker mapMaker) {
     return mapMaker.weakKeys();
   }
 
-  static int reduceIterationsIfGwt(int iterations) {
+  static int reduceIterationsIfGwt(final int iterations) {
     return iterations;
   }
 
-  static int reduceExponentIfGwt(int exponent) {
+  static int reduceExponentIfGwt(final int exponent) {
     return exponent;
   }
 

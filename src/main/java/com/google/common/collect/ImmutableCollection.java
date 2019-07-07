@@ -191,10 +191,10 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @Override
   public final <T> T[] toArray(T[] other) {
     checkNotNull(other);
-    int size = size();
+    final int size = size();
 
     if (other.length < size) {
-      Object[] internal = internalArray();
+      final Object[] internal = internalArray();
       if (internal != null) {
         return Platform.copy(internal, internalArrayStart(), internalArrayEnd(), other);
       }
@@ -240,7 +240,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  public final boolean add(E e) {
+  public final boolean add(final E e) {
     throw new UnsupportedOperationException();
   }
 
@@ -253,7 +253,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  public final boolean remove(Object object) {
+  public final boolean remove(final Object object) {
     throw new UnsupportedOperationException();
   }
 
@@ -266,7 +266,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  public final boolean addAll(Collection<? extends E> newElements) {
+  public final boolean addAll(final Collection<? extends E> newElements) {
     throw new UnsupportedOperationException();
   }
 
@@ -279,7 +279,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  public final boolean removeAll(Collection<?> oldElements) {
+  public final boolean removeAll(final Collection<?> oldElements) {
     throw new UnsupportedOperationException();
   }
 
@@ -292,7 +292,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  public final boolean removeIf(Predicate<? super E> filter) {
+  public final boolean removeIf(final Predicate<? super E> filter) {
     throw new UnsupportedOperationException();
   }
 
@@ -304,7 +304,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
    */
   @Deprecated
   @Override
-  public final boolean retainAll(Collection<?> elementsToKeep) {
+  public final boolean retainAll(final Collection<?> elementsToKeep) {
     throw new UnsupportedOperationException();
   }
 
@@ -354,8 +354,8 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
    * offset. Returns {@code offset + size()}.
    */
   @CanIgnoreReturnValue
-  int copyIntoArray(Object[] dst, int offset) {
-    for (E e : this) {
+  int copyIntoArray(final Object[] dst, int offset) {
+    for (final E e : this) {
       dst[offset++] = e;
     }
     return offset;
@@ -374,7 +374,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   public abstract static class Builder<E> {
     static final int DEFAULT_INITIAL_CAPACITY = 4;
 
-    static int expandedCapacity(int oldCapacity, int minCapacity) {
+    static int expandedCapacity(final int oldCapacity, final int minCapacity) {
       if (minCapacity < 0) {
         throw new AssertionError("cannot store more than MAX_VALUE elements");
       }
@@ -415,8 +415,8 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
     @CanIgnoreReturnValue
-    public Builder<E> add(E... elements) {
-      for (E element : elements) {
+    public Builder<E> add(@SuppressWarnings("unchecked") final E... elements) {
+      for (final E element : elements) {
         add(element);
       }
       return this;
@@ -433,8 +433,8 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterable<? extends E> elements) {
-      for (E element : elements) {
+    public Builder<E> addAll(final Iterable<? extends E> elements) {
+      for (final E element : elements) {
         add(element);
       }
       return this;
@@ -451,7 +451,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(final Iterator<? extends E> elements) {
       while (elements.hasNext()) {
         add(elements.next());
       }

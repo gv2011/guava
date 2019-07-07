@@ -32,8 +32,8 @@ import java.util.function.Consumer;
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // we're overriding default serialization
 final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
-  @SuppressWarnings("rawtypes") // necessary to compile against Java 8
-  static ImmutableSet asImmutable(EnumSet set) {
+  @SuppressWarnings({ "rawtypes", "unchecked" }) // necessary to compile against Java 8
+  static ImmutableSet asImmutable(final EnumSet set) {
     switch (set.size()) {
       case 0:
         return ImmutableSet.of();
@@ -54,7 +54,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
    */
   private final transient EnumSet<E> delegate;
 
-  private ImmutableEnumSet(EnumSet<E> delegate) {
+  private ImmutableEnumSet(final EnumSet<E> delegate) {
     this.delegate = delegate;
   }
 
@@ -74,7 +74,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   }
 
   @Override
-  public void forEach(Consumer<? super E> action) {
+  public void forEach(final Consumer<? super E> action) {
     delegate.forEach(action);
   }
 
@@ -84,7 +84,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   }
 
   @Override
-  public boolean contains(Object object) {
+  public boolean contains(final Object object) {
     return delegate.contains(object);
   }
 
@@ -121,7 +121,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
 
   @Override
   public int hashCode() {
-    int result = hashCode;
+    final int result = hashCode;
     return (result == 0) ? hashCode = delegate.hashCode() : result;
   }
 
@@ -142,7 +142,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   private static class EnumSerializedForm<E extends Enum<E>> implements Serializable {
     final EnumSet<E> delegate;
 
-    EnumSerializedForm(EnumSet<E> delegate) {
+    EnumSerializedForm(final EnumSet<E> delegate) {
       this.delegate = delegate;
     }
 
