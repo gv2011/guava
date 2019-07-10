@@ -10,8 +10,34 @@
   <artifactId>guava-core</artifactId>
   <version>28.1</version>
 
-
+  <description>
+    Fork of Guava.
+    Reduced to a selection of classes (especially immutable collections). 
+    No dependencies, Java 9 module.
+  </description>
+  
+  <url>https://github.com/gv2011/guava</url>
+  
   <scm>
-    <tag>guava-core-28.1</tag>
+    <connection>scm:git:git@github.com:gv2011/guava.git</connection>
+    <developerConnection>scm:git:git@github.com:gv2011/guava.git</developerConnection>
+    <url>https://github.com/gv2011/guava</url>
+    <tag>HEAD</tag>
   </scm>
+  
+  <inceptionYear>2019</inceptionYear>
+  
+    <licenses>
+    <license>
+      <name>The MIT License (in combination with Apache License 2.0)</name>
+       <comments>
+        The license applies to this Maven artifact, its modules and other content within the GIT repository
+        specified in the scm section of this file.
+        The copyright years are given by the inceptionYear tag within this file and by the history of the 
+        GIT repository.
+        See file LICENSE.txt.
+      </comments>
+    </license>
+  </licenses>
+  
 </project>
