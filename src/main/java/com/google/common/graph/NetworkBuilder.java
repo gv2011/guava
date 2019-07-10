@@ -118,8 +118,6 @@ public final class NetworkBuilder<N, E> extends AbstractGraphBuilder<N> {
   /**
    * Specifies whether the network will allow parallel edges. Attempting to add a parallel edge to a
    * network that does not allow them will throw an {@link UnsupportedOperationException}.
-   *
-   * <p>The default value is {@code false}.
    */
   public NetworkBuilder<N, E> allowsParallelEdges(boolean allowsParallelEdges) {
     this.allowsParallelEdges = allowsParallelEdges;
@@ -130,8 +128,6 @@ public final class NetworkBuilder<N, E> extends AbstractGraphBuilder<N> {
    * Specifies whether the network will allow self-loops (edges that connect a node to itself).
    * Attempting to add a self-loop to a network that does not allow them will throw an {@link
    * UnsupportedOperationException}.
-   *
-   * <p>The default value is {@code false}.
    */
   public NetworkBuilder<N, E> allowsSelfLoops(boolean allowsSelfLoops) {
     this.allowsSelfLoops = allowsSelfLoops;
@@ -158,22 +154,14 @@ public final class NetworkBuilder<N, E> extends AbstractGraphBuilder<N> {
     return this;
   }
 
-  /**
-   * Specifies the order of iteration for the elements of {@link Network#nodes()}.
-   *
-   * <p>The default value is {@link ElementOrder#insertion() insertion order}.
-   */
+  /** Specifies the order of iteration for the elements of {@link Network#nodes()}. */
   public <N1 extends N> NetworkBuilder<N1, E> nodeOrder(ElementOrder<N1> nodeOrder) {
     NetworkBuilder<N1, E> newBuilder = cast();
     newBuilder.nodeOrder = checkNotNull(nodeOrder);
     return newBuilder;
   }
 
-  /**
-   * Specifies the order of iteration for the elements of {@link Network#edges()}.
-   *
-   * <p>The default value is {@link ElementOrder#insertion() insertion order}.
-   */
+  /** Specifies the order of iteration for the elements of {@link Network#edges()}. */
   public <E1 extends E> NetworkBuilder<N, E1> edgeOrder(ElementOrder<E1> edgeOrder) {
     NetworkBuilder<N, E1> newBuilder = cast();
     newBuilder.edgeOrder = checkNotNull(edgeOrder);
