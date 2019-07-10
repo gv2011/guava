@@ -11,9 +11,7 @@
   <version>28.1</version>
 
   <description>
-    Fork of Guava.
-    Reduced to a selection of classes (especially immutable collections). 
-    No dependencies, Java 9 module.
+    Low level (JsonWriter and JsonReader) functionality extracted from  Gson.
   </description>
   
   <url>https://github.com/gv2011/guava</url>
