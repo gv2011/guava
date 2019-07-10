@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gv2011/guava-core.svg?branch=dev)](https://travis-ci.org/gv2011/guava-core)
+[![Build Status](https://travis-ci.org/gv2011/guava.svg?branch=dev)](https://travis-ci.org/gv2011/guava)
 
 
 # util
