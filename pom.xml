@@ -11,7 +11,9 @@
   <version>28.2-SNAPSHOT</version>
 
   <description>
-    Low level (JsonWriter and JsonReader) functionality extracted from  Gson.
+    Fork of Guava.
+    Reduced to a selection of classes (especially immutable collections). 
+    No dependencies, Java 9 module.
   </description>
   
   <url>https://github.com/gv2011/guava</url>
