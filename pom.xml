@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>guava-core</artifactId>
-  <version>28.1</version>
+  <version>28.2-SNAPSHOT</version>
 
   <description>
     Low level (JsonWriter and JsonReader) functionality extracted from  Gson.
@@ -20,7 +20,7 @@
     <connection>scm:git:git@github.com:gv2011/guava.git</connection>
     <developerConnection>scm:git:git@github.com:gv2011/guava.git</developerConnection>
     <url>https://github.com/gv2011/guava</url>
-    <tag>guava-core-28.1</tag>
+    <tag>HEAD</tag>
   </scm>
   
   <inceptionYear>2019</inceptionYear>
