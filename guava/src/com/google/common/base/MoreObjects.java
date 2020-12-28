@@ -15,10 +15,13 @@
 package com.google.common.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.logging.Level.WARNING;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.Arrays;
+import java.util.logging.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -46,6 +49,9 @@ public final class MoreObjects {
    * accomplished with {@link Optional#or(Object) first.or(second)}. That approach also allows for
    * lazy evaluation of the fallback instance, using {@link Optional#or(Supplier)
    * first.or(supplier)}.
+   *
+   * <p><b>Java 9 users:</b> use {@code java.util.Objects.requireNonNullElse(first, second)}
+   * instead.
    *
    * @return {@code first} if it is non-null; otherwise {@code second} if it is non-null
    * @throws NullPointerException if both {@code first} and {@code second} are null
@@ -138,6 +144,38 @@ public final class MoreObjects {
    * @since 18.0 (since 2.0 as {@code Objects.ToStringHelper}).
    */
   public static final class ToStringHelper {
+    @GuardedBy("ToStringHelper.class")
+    private static boolean performedJava8CompatibilityCheck;
+
+    private static void java8CompatibilityCheck() {
+      @SuppressWarnings("GuardedBy")
+      boolean racyReadForDoubleCheckedLock = performedJava8CompatibilityCheck;
+      if (racyReadForDoubleCheckedLock) {
+        return;
+      }
+      synchronized (ToStringHelper.class) {
+        if (performedJava8CompatibilityCheck) {
+          return;
+        }
+        performedJava8CompatibilityCheck = true;
+      }
+
+      try {
+        Java8Usage.performCheck();
+      } catch (Throwable underlying) {
+        Exception toLog =
+            new Exception(
+                "Guava will drop support for Java 7 in 2021. Please let us know if this will cause"
+                    + " you problems: https://github.com/google/guava/issues/5269",
+                underlying);
+        Logger.getLogger(ToStringHelper.class.getName())
+            .log(
+                WARNING,
+                "Java 7 compatibility warning: See https://github.com/google/guava/issues/5269",
+                toLog);
+      }
+    }
+
     private final String className;
     private final ValueHolder holderHead = new ValueHolder();
     private ValueHolder holderTail = holderHead;
@@ -145,6 +183,7 @@ public final class MoreObjects {
 
     /** Use {@link MoreObjects#toStringHelper(Object)} to create an instance. */
     private ToStringHelper(String className) {
+      java8CompatibilityCheck();
       this.className = checkNotNull(className);
     }
 

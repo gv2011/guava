@@ -60,6 +60,7 @@ public final class Tables {
    * <p>If multiple input elements map to the same row and column, an {@code IllegalStateException}
    * is thrown when the collection operation is performed.
    *
+   *
    * @since 21.0
    */
   @Beta
@@ -68,14 +69,7 @@ public final class Tables {
       java.util.function.Function<? super T, ? extends C> columnFunction,
       java.util.function.Function<? super T, ? extends V> valueFunction,
       java.util.function.Supplier<I> tableSupplier) {
-    return toTable(
-        rowFunction,
-        columnFunction,
-        valueFunction,
-        (v1, v2) -> {
-          throw new IllegalStateException("Conflicting values " + v1 + " and " + v2);
-        },
-        tableSupplier);
+    return TableCollectors.toTable(rowFunction, columnFunction, valueFunction, tableSupplier);
   }
 
   /**
@@ -90,6 +84,7 @@ public final class Tables {
    * NullPointerException} on null values returned from {@code valueFunction}, and treats nulls
    * returned from {@code mergeFunction} as removals of that row/column pair.
    *
+   *
    * @since 21.0
    */
   public static <T, R, C, V, I extends Table<R, C, V>> Collector<T, ?, I> toTable(
@@ -98,42 +93,8 @@ public final class Tables {
       java.util.function.Function<? super T, ? extends V> valueFunction,
       BinaryOperator<V> mergeFunction,
       java.util.function.Supplier<I> tableSupplier) {
-    checkNotNull(rowFunction);
-    checkNotNull(columnFunction);
-    checkNotNull(valueFunction);
-    checkNotNull(mergeFunction);
-    checkNotNull(tableSupplier);
-    return Collector.of(
-        tableSupplier,
-        (table, input) ->
-            merge(
-                table,
-                rowFunction.apply(input),
-                columnFunction.apply(input),
-                valueFunction.apply(input),
-                mergeFunction),
-        (table1, table2) -> {
-          for (Table.Cell<R, C, V> cell2 : table2.cellSet()) {
-            merge(table1, cell2.getRowKey(), cell2.getColumnKey(), cell2.getValue(), mergeFunction);
-          }
-          return table1;
-        });
-  }
-
-  private static <R, C, V> void merge(
-      Table<R, C, V> table, R row, C column, V value, BinaryOperator<V> mergeFunction) {
-    checkNotNull(value);
-    V oldValue = table.get(row, column);
-    if (oldValue == null) {
-      table.put(row, column, value);
-    } else {
-      V newValue = mergeFunction.apply(oldValue, value);
-      if (newValue == null) {
-        table.remove(row, column);
-      } else {
-        table.put(row, column, newValue);
-      }
-    }
+    return TableCollectors.toTable(
+        rowFunction, columnFunction, valueFunction, mergeFunction, tableSupplier);
   }
 
   /**

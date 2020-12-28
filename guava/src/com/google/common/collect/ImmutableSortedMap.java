@@ -70,6 +70,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
    * from the {@code Collector} returned by {@link Collectors#toMap(Function, Function)}, which
    * throws an {@code IllegalStateException}.)
    *
+   *
    * @since 21.0
    */
   public static <T, K, V> Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
@@ -88,6 +89,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
    * merged using the specified merging function. Entries will appear in the encounter order of the
    * first occurrence of the key.
    *
+   *
    * @since 21.0
    */
   public static <T, K, V> Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
@@ -95,14 +97,8 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
       Function<? super T, ? extends K> keyFunction,
       Function<? super T, ? extends V> valueFunction,
       BinaryOperator<V> mergeFunction) {
-    checkNotNull(comparator);
-    checkNotNull(keyFunction);
-    checkNotNull(valueFunction);
-    checkNotNull(mergeFunction);
-    return Collectors.collectingAndThen(
-        Collectors.toMap(
-            keyFunction, valueFunction, mergeFunction, () -> new TreeMap<K, V>(comparator)),
-        ImmutableSortedMap::copyOfSorted);
+    return CollectCollectors.toImmutableSortedMap(
+        comparator, keyFunction, valueFunction, mergeFunction);
   }
 
   /*
@@ -916,19 +912,17 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
    * are reconstructed using public factory methods. This ensures that the implementation types
    * remain as implementation details.
    */
-  private static class SerializedForm extends ImmutableMap.SerializedForm {
-    private final Comparator<Object> comparator;
+  private static class SerializedForm<K, V> extends ImmutableMap.SerializedForm<K, V> {
+    private final Comparator<? super K> comparator;
 
-    @SuppressWarnings("unchecked")
-    SerializedForm(ImmutableSortedMap<?, ?> sortedMap) {
+    SerializedForm(ImmutableSortedMap<K, V> sortedMap) {
       super(sortedMap);
-      comparator = (Comparator<Object>) sortedMap.comparator();
+      comparator = sortedMap.comparator();
     }
 
     @Override
-    Object readResolve() {
-      Builder<Object, Object> builder = new Builder<>(comparator);
-      return createMap(builder);
+    Builder<K, V> makeBuilder(int size) {
+      return new Builder<>(comparator);
     }
 
     private static final long serialVersionUID = 0;
@@ -936,7 +930,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
 
   @Override
   Object writeReplace() {
-    return new SerializedForm(this);
+    return new SerializedForm<>(this);
   }
 
   // This class is never actually serialized directly, but we have to make the

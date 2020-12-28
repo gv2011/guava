@@ -5,14 +5,14 @@
   <parent>
     <groupId>com.google.guava</groupId>
     <artifactId>guava-parent</artifactId>
-    <version>28.0-jre</version>
+    <version>30.1-jre</version>
   </parent>
   <artifactId>guava</artifactId>
   <packaging>bundle</packaging>
   <name>Guava: Google Core Libraries for Java</name>
   <description>
     Guava is a suite of core and expanded libraries that include
-    utility classes, google's collections, io classes, and much
+    utility classes, Google's collections, I/O classes, and
     much more.
   </description>
   <dependencies>
@@ -41,11 +41,6 @@
     <dependency>
       <groupId>com.google.j2objc</groupId>
       <artifactId>j2objc-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>animal-sniffer-annotations</artifactId>
-      <version>${animal.sniffer.version}</version>
     </dependency>
     <!-- TODO(cpovirk): does this comment belong on the <dependency> in <profiles>? -->
     <!-- TODO(cpovirk): want this only for dependency plugin but seems not to work there? Maven runs without failure, but the resulting Javadoc is missing the hoped-for inherited text -->
@@ -95,6 +90,42 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+                 The execution named default-compile happens first, regardless
+                 of the order of the executions in the source file. So, because
+                 Java8Usage is a dependency of the main sources, we need to call
+                 its compilation "default-compile," even though it's the special
+                 case.
+            -->
+            <id>default-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>**/Java8Usage.java</include>
+              </includes>
+              <!-- -source 8 -target 8 is a no-op in the mainline but matters in the backport. -->
+              <source>8</source>
+              <target>8</target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>main-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/Java8Usage.java</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
@@ -111,6 +142,8 @@
               <includeArtifactIds>srczip</includeArtifactIds>
               <outputDirectory>${project.build.directory}/jdk-sources</outputDirectory>
               <silent>false</silent>
+              <!-- Exclude module-info files (since we're using -source 8 to avoid other modules problems) and FileDescriptor (which uses a language feature not available in Java 8). -->
+              <excludes>**/module-info.java,**/java/io/FileDescriptor.java</excludes>
             </configuration>
           </execution>
         </executions>
@@ -133,6 +166,33 @@
           <excludePackageNames>
             com.google.common.base.internal,com.google.common.base.internal.*,com.google.thirdparty.publicsuffix,com.google.thirdparty.publicsuffix.*,com.oracle.*,com.sun.*,java.*,javax.*,jdk,jdk.*,org.*,sun.*
           </excludePackageNames>
+          <!-- Ignore some tags that are found in Java 11 sources but not recognized... under -source 8, I think it was? I can no longer reproduce the failure. -->
+          <tags>
+            <tag>
+              <name>apiNote</name>
+              <placement>X</placement>
+            </tag>
+            <tag>
+              <name>implNote</name>
+              <placement>X</placement>
+            </tag>
+            <tag>
+              <name>implSpec</name>
+              <placement>X</placement>
+            </tag>
+            <tag>
+              <name>jls</name>
+              <placement>X</placement>
+            </tag>
+            <tag>
+              <name>revised</name>
+              <placement>X</placement>
+            </tag>
+            <tag>
+              <name>spec</name>
+              <placement>X</placement>
+            </tag>
+          </tags>
 
           <!-- TODO(cpovirk): Move this to the parent after making the package-list files available there. -->
           <!-- We add the link ourselves, both so that we can choose Java 9 over the version that -source suggests and so that we can solve the JSR305 problem described below. -->
@@ -178,7 +238,7 @@
   </build>
   <profiles>
     <profile>
-      <id>srczip</id>
+      <id>srczip-parent</id>
       <activation>
         <file>
           <exists>${java.home}/../src.zip</exists>
@@ -194,6 +254,35 @@
           <optional>true</optional>
         </dependency>
       </dependencies>
+    </profile>
+    <profile>
+      <id>srczip-lib</id>
+      <activation>
+        <file>
+          <exists>${java.home}/lib/src.zip</exists>
+        </file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jdk</groupId>
+          <artifactId>srczip</artifactId>
+          <version>999</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/lib/src.zip</systemPath>
+          <optional>true</optional>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <!-- We need to point at the java.base subdirectory because Maven appears to assume that package foo.bar is located in foo/bar and not java.base/foo/bar when translating excludePackageNames into filenames to pass to javadoc. (Note that manually passing -exclude to javadoc appears to possibly not work at all for java.* types??) Also, referring only to java.base avoids a lot of other sources. -->
+              <sourcepath>${project.build.sourceDirectory}:${project.build.directory}/jdk-sources/java.base</sourcepath>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>

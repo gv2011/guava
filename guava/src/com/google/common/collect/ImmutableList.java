@@ -65,6 +65,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    * Returns a {@code Collector} that accumulates the input elements into a new {@code
    * ImmutableList}, in encounter order.
    *
+   *
    * @since 21.0
    */
   public static <E> Collector<E, ?, ImmutableList<E>> toImmutableList() {
@@ -84,7 +85,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
 
   /**
    * Returns an immutable list containing a single element. This list behaves and performs
-   * comparably to {@link Collections#singleton}, but will not accept a null element. It is
+   * comparably to {@link Collections#singletonList}, but will not accept a null element. It is
    * preferable mainly for consistency and maintainability of your code.
    *
    * @throws NullPointerException if {@code element} is null
@@ -837,7 +838,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     /**
      * Adds each element of {@code elements} to the {@code ImmutableList}.
      *
-     * @param elements the {@code Iterable} to add to the {@code ImmutableList}
+     * @param elements the {@code Iterator} to add to the {@code ImmutableList}
      * @return this {@code Builder} object
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */

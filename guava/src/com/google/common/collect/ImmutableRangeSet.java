@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collector;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -60,6 +59,7 @@ public final class ImmutableRangeSet<C extends Comparable> extends AbstractRange
    * Returns a {@code Collector} that accumulates the input elements into a new {@code
    * ImmutableRangeSet}. As in {@link Builder}, overlapping ranges are not permitted and adjacent
    * ranges will be merged.
+   *
    *
    * @since 23.1
    */
@@ -541,7 +541,7 @@ public final class ImmutableRangeSet<C extends Comparable> extends AbstractRange
       this.domain = domain;
     }
 
-    private transient @MonotonicNonNull Integer size;
+    private transient @Nullable Integer size;
 
     @Override
     public int size() {

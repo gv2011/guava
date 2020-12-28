@@ -22,11 +22,13 @@ import static com.google.common.collect.ObjectArrays.checkElementsNotNull;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.DoNotMock;
 import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
@@ -156,6 +158,7 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
  *
  * @since 2.0
  */
+@DoNotMock("Use ImmutableList.of or another implementation")
 @GwtCompatible(emulated = true)
 @SuppressWarnings("serial") // we're overriding default serialization
 // TODO(kevinb): I think we should push everything down to "BaseImmutableCollection" or something,
@@ -195,6 +198,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   }
 
   /** If this collection is backed by an array of its elements in insertion order, returns it. */
+  @NullableDecl
   Object[] internalArray() {
     return null;
   }
@@ -339,6 +343,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
    *
    * @since 10.0
    */
+  @DoNotMock
   public abstract static class Builder<E> {
     static final int DEFAULT_INITIAL_CAPACITY = 4;
 
@@ -475,11 +480,15 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
     @CanIgnoreReturnValue
     @Override
     public Builder<E> add(E... elements) {
-      checkElementsNotNull(elements);
-      getReadyToExpandTo(size + elements.length);
-      System.arraycopy(elements, 0, contents, size, elements.length);
-      size += elements.length;
+      addAll(elements, elements.length);
       return this;
+    }
+
+    final void addAll(Object[] elements, int n) {
+      checkElementsNotNull(elements, n);
+      getReadyToExpandTo(size + n);
+      System.arraycopy(elements, 0, contents, size, n);
+      size += n;
     }
 
     @CanIgnoreReturnValue
