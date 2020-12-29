@@ -4,40 +4,58 @@
   <parent>
     <groupId>com.github.gv2011</groupId>
     <artifactId>parent-gv</artifactId>
-    <version>0.5.0</version>
+    <version>1.0</version>
   </parent>
 
   <artifactId>guava-core</artifactId>
-  <version>28.2-SNAPSHOT</version>
+  <version>28.2</version>
 
   <description>
-    Fork of Guava.
+    Fork of Guava (https://github.com/google/guava).
     Reduced to a selection of classes (especially immutable collections). 
     No dependencies, Java 9 module.
   </description>
-  
+
   <url>https://github.com/gv2011/guava</url>
-  
+
   <scm>
     <connection>scm:git:git@github.com:gv2011/guava.git</connection>
     <developerConnection>scm:git:git@github.com:gv2011/guava.git</developerConnection>
     <url>https://github.com/gv2011/guava</url>
-    <tag>HEAD</tag>
+    <tag>guava-core-28.2</tag>
   </scm>
-  
+
   <inceptionYear>2019</inceptionYear>
-  
-    <licenses>
+
+  <licenses>
     <license>
-      <name>The MIT License (in combination with Apache License 2.0)</name>
-       <comments>
+      <name>Apache License, Version 2.0</name>
+      <url>https://opensource.org/licenses/Apache-2.0</url>
+      <comments>
+        This is a fork of https://github.com/google/guava.
         The license applies to this Maven artifact, its modules and other content within the GIT repository
         specified in the scm section of this file.
         The copyright years are given by the inceptionYear tag within this file and by the history of the 
-        GIT repository.
-        See file LICENSE.txt.
+        former GIT repository as well as the original repository at https://github.com/google/guava.
+        The inceptionYear refers to the fork.
       </comments>
     </license>
   </licenses>
-  
+
+  <developers>
+    <developer>
+      <name>The Guava authors</name>
+      <url>https://github.com/google/guava</url>
+    </developer>
+    <developer>
+      <id>gv2011</id>
+      <name>Vinz</name>
+      <url>https://github.com/gv2011</url>
+    </developer>
+  </developers>
+
+  <properties>
+    <java.release>11</java.release>
+  </properties>
+
 </project>
