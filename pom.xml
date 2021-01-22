@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.github.gv2011</groupId>
     <artifactId>parent-gv</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
   </parent>
 
   <artifactId>guava-core</artifactId>
