@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>guava-core</artifactId>
-  <version>28.3.1</version>
+  <version>28.3.2-SNAPSHOT</version>
 
   <description>
     Fork of Guava (https://github.com/google/guava).
@@ -22,7 +22,7 @@
     <connection>scm:git:git@github.com:gv2011/guava.git</connection>
     <developerConnection>scm:git:git@github.com:gv2011/guava.git</developerConnection>
     <url>https://github.com/gv2011/guava</url>
-    <tag>guava-core-28.3.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <inceptionYear>2019</inceptionYear>
